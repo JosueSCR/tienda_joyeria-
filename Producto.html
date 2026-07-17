@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ÉCLAT — Producto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+  body { background:#000000; }
+  select { appearance:none; -webkit-appearance:none; }
+
+  .crumb-section { padding:28px 56px 12px; }
+  .back-circle-inline { display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; border:1px solid rgba(245,240,232,0.25); border-radius:50%; font-size:20px; color:#F5F0E8; }
+
+  .not-found { max-width:480px; margin:0 auto; text-align:center; padding:60px 0; }
+  .not-found h1 { font-family:'Cormorant Garamond', serif; font-size:30px; letter-spacing:2px; margin:0 0 18px; font-weight:600; }
+  .not-found p { font-size:14px; color:rgba(245,240,232,0.6); line-height:1.7; margin:0 0 28px; }
+  .not-found a { display:inline-block; background:#C9A84C; color:#071F1A; padding:14px 32px; font-size:12.5px; letter-spacing:2px; font-weight:500; }
+
+  .pdp-grid { display:grid; grid-template-columns:80px 1fr 0.85fr; gap:24px; max-width:1080px; margin:0 auto; align-items:start; }
+  .thumb-col { display:flex; flex-direction:column; gap:12px; }
+  .thumb { width:80px; height:80px; background:linear-gradient(160deg, #0a2b23, #050f0c); background-size:cover; background-position:center; border:1px solid rgba(245,240,232,0.15); cursor:pointer; transition:border-color 0.2s; }
+  .thumb.active { border-color:#C9A84C; }
+  .main-image { height:440px; background:linear-gradient(160deg, #0a2b23, #050f0c); background-size:cover; background-position:center; display:flex; align-items:center; justify-content:center; color:rgba(245,240,232,0.35); font-size:12px; letter-spacing:1.5px; font-family:monospace; }
+
+  .pdp-info { display:flex; flex-direction:column; gap:20px; padding-top:4px; }
+  .pdp-title { font-family:'Cormorant Garamond', serif; font-size:32px; letter-spacing:2px; margin:0; font-weight:600; }
+  .pdp-price-row { display:flex; align-items:baseline; gap:12px; }
+  .pdp-price-offer { font-size:20px; color:#C9A84C; font-weight:500; }
+  .pdp-price-strike { font-size:15px; color:rgba(245,240,232,0.4); text-decoration:line-through; }
+  .pdp-price { font-size:20px; color:#C9A84C; font-weight:500; }
+  .pdp-desc { font-size:14px; line-height:1.7; color:rgba(245,240,232,0.7); margin:0; }
+
+  .size-select { width:100%; background:#0a0a0a; color:#F5F0E8; border:1px solid rgba(245,240,232,0.25); padding:14px 16px; font-size:13px; font-family:'Jost',sans-serif; }
+  .size-select.error { border-color:#e0a06a; }
+
+  .qty-box { display:flex; align-items:center; gap:0; border:1px solid rgba(245,240,232,0.25); width:130px; }
+  .qty-box button { flex:1; background:transparent; border:none; color:#F5F0E8; font-size:16px; padding:12px 0; cursor:pointer; }
+  .qty-box .qty-val { flex:1; text-align:center; font-size:14px; }
+
+  .add-cart-btn { width:100%; background:#0F4C3A; color:#F5F0E8; border:none; padding:18px 0; font-size:13px; letter-spacing:2.5px; font-weight:500; cursor:pointer; }
+  .fav-link-btn { background:transparent; border:none; text-align:center; font-size:12px; letter-spacing:1.5px; color:#C9A84C; cursor:pointer; padding:8px 0; }
+
+  .related-section { padding:20px 56px 100px; }
+  .related-wrap { max-width:1200px; margin:0 auto; }
+  .related-wrap h2 { font-family:'Cormorant Garamond', serif; font-size:26px; letter-spacing:2px; margin:0 0 32px; font-weight:600; }
+  .related-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:28px; }
+
+  @media (max-width: 860px) {
+    .pdp-grid { grid-template-columns:1fr; }
+    .thumb-col { flex-direction:row; }
+    .related-grid { grid-template-columns:1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div id="navMount"></div>
+
+  <section class="crumb-section">
+    <div class="breadcrumb">
+      <a href="index.html">INICIO</a> / <a id="categoryCrumb" href="#">CATEGORÍA</a> / <span id="nameCrumb" style="color:#F5F0E8;"></span>
+    </div>
+    <a id="backLink" href="#" class="back-circle-inline">&#8592;</a>
+  </section>
+
+  <section style="padding:24px 56px 100px;">
+    <div id="notFound" class="not-found hidden">
+      <div class="eyebrow">ERROR 404</div>
+      <h1>PRODUCTO NO ENCONTRADO</h1>
+      <p>La pieza que busca ya no está disponible o el enlace es incorrecto.</p>
+      <a href="index.html">VOLVER AL INICIO</a>
+    </div>
+
+    <div id="pdpContent" class="pdp-grid hidden">
+      <div class="thumb-col" id="thumbCol"></div>
+      <div class="main-image" id="mainImage">product photo</div>
+      <div class="pdp-info">
+        <h1 class="pdp-title" id="productName"></h1>
+        <div id="priceRow"></div>
+        <p class="pdp-desc" id="productDesc"></p>
+
+        <div>
+          <div class="form-label">TALLA</div>
+          <select id="sizeSelect" class="size-select">
+            <option value="">Seleccione su talla</option>
+            <option value="unica">Única</option>
+          </select>
+          <div id="sizeError" class="error-text hidden">Seleccione una talla antes de continuar.</div>
+        </div>
+
+        <div>
+          <div class="form-label">CANTIDAD</div>
+          <div class="qty-box">
+            <button type="button" id="qtyMinus">&minus;</button>
+            <div class="qty-val" id="qtyVal">1</div>
+            <button type="button" id="qtyPlus">+</button>
+          </div>
+        </div>
+
+        <button type="button" id="addToCartBtn" class="add-cart-btn">AGREGAR AL CARRITO</button>
+        <button type="button" id="favBtn" class="fav-link-btn"></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="related-section" id="relatedSection">
+    <div class="related-wrap">
+      <h2>TAMBIÉN TE PUEDE INTERESAR</h2>
+      <div class="related-grid" id="relatedGrid"></div>
+    </div>
+  </section>
+
+  <footer class="site-footer">© 2024 ÉCLAT. Todos los derechos reservados.</footer>
+</div>
+
+<script src="store.js"></script>
+<script src="nav-widgets.js"></script>
+<script src="reveal.js"></script>
+<script src="nav.js"></script>
+<script>
+(function () {
+EclatNav.render(document.getElementById('navMount'), { active: '', accountMode: 'link' });
+
+  var FAV_KEY = 'eclat-favorites';
+  var CART_KEY = 'eclat-cart';
+
+  function loadJSON(key) { try { return JSON.parse(localStorage.getItem(key)) || []; } catch (e) { return []; } }
+  function saveJSON(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+  function bgFor(url) { return url ? ('url(' + JSON.stringify(url) + ')') : ''; }
+
+  var params = new URLSearchParams(window.location.search);
+  var id = parseInt(params.get('id') || '0', 10);
+
+  (async function () {
+    var item;
+    try {
+      item = await window.EclatStore.getProduct(id);
+    } catch (e) {
+      item = null;
+    }
+
+    if (!item) {
+      document.getElementById('notFound').classList.remove('hidden');
+      document.getElementById('pdpContent').classList.add('hidden');
+      document.getElementById('relatedSection').classList.add('hidden');
+      document.querySelector('.crumb-section').classList.add('hidden');
+      return;
+    }
+
+    document.title = 'ÉCLAT — ' + item.name;
+    document.getElementById('categoryCrumb').textContent = item.catLabel;
+    document.getElementById('categoryCrumb').href = item.catHref;
+    document.getElementById('nameCrumb').textContent = item.name;
+    document.getElementById('backLink').href = item.catHref;
+
+    var state = { qty: 1, selectedThumb: -1, size: '' };
+    var images = item.images || { main: '', details: ['', '', '', ''] };
+
+    function renderThumbs() {
+      var col = document.getElementById('thumbCol');
+      col.innerHTML = '';
+      [0, 1, 2, 3].forEach(function (i) {
+        var t = document.createElement('div');
+        t.className = 'thumb' + (state.selectedThumb === i ? ' active' : '');
+        if (images.details[i]) t.style.backgroundImage = bgFor(images.details[i]);
+        t.addEventListener('click', function () {
+          state.selectedThumb = i;
+          renderThumbs();
+          renderMainImage();
+        });
+        col.appendChild(t);
+      });
+    }
+
+    function renderMainImage() {
+      var main = document.getElementById('mainImage');
+      var url = state.selectedThumb === -1 ? images.main : images.details[state.selectedThumb];
+      if (url) { main.style.backgroundImage = bgFor(url); main.textContent = ''; }
+      else { main.style.backgroundImage = 'none'; main.textContent = 'product photo'; }
+    }
+
+    document.getElementById('productName').textContent = item.name;
+    document.getElementById('productDesc').textContent = item.desc;
+
+    var priceRow = document.getElementById('priceRow');
+    if (item.offer) {
+      priceRow.innerHTML = '<div class="pdp-price-row"><span class="pdp-price-offer">' + item.offerPrice + '</span><span class="pdp-price-strike">' + item.price + '</span></div>';
+    } else {
+      priceRow.innerHTML = '<div class="pdp-price">' + item.price + '</div>';
+    }
+
+    var favorites = loadJSON(FAV_KEY);
+    function isFav() { return favorites.some(function (f) { return f.id === item.id; }); }
+    function renderFavBtn() {
+      var btn = document.getElementById('favBtn');
+      btn.textContent = (isFav() ? '♥ ' : '♡ ') + (isFav() ? 'GUARDADO EN FAVORITOS' : 'AGREGAR A FAVORITOS');
+    }
+    document.getElementById('favBtn').addEventListener('click', function () {
+      var i = favorites.findIndex(function (f) { return f.id === item.id; });
+      if (i >= 0) favorites.splice(i, 1);
+      else favorites.push({ id: item.id, name: item.name, price: item.price });
+      saveJSON(FAV_KEY, favorites);
+      renderFavBtn();
+    });
+
+    var qtyVal = document.getElementById('qtyVal');
+    document.getElementById('qtyMinus').addEventListener('click', function () {
+      state.qty = Math.max(1, state.qty - 1);
+      qtyVal.textContent = state.qty;
+    });
+    document.getElementById('qtyPlus').addEventListener('click', function () {
+      state.qty = state.qty + 1;
+      qtyVal.textContent = state.qty;
+    });
+
+    var sizeSelect = document.getElementById('sizeSelect');
+    var sizeError = document.getElementById('sizeError');
+    sizeSelect.addEventListener('change', function () {
+      state.size = sizeSelect.value;
+      sizeSelect.classList.remove('error');
+      sizeError.classList.add('hidden');
+    });
+
+    var addBtn = document.getElementById('addToCartBtn');
+    addBtn.addEventListener('click', function () {
+      if (!state.size) {
+        sizeSelect.classList.add('error');
+        sizeError.classList.remove('hidden');
+        return;
+      }
+      var cart = loadJSON(CART_KEY);
+      var existing = cart.find(function (it) { return it.id === item.id; });
+      if (existing) existing.qty += state.qty;
+      else cart.push({ id: item.id, name: item.name, price: item.price, qty: state.qty });
+      saveJSON(CART_KEY, cart);
+      if (window.EclatUpdateBadge) window.EclatUpdateBadge();
+      addBtn.textContent = 'AGREGADO';
+      setTimeout(function () { addBtn.textContent = 'AGREGAR AL CARRITO'; }, 1800);
+    });
+
+    var relatedGrid = document.getElementById('relatedGrid');
+    try {
+      var allInCat = await window.EclatStore.getProducts(item.cat);
+      var related = allInCat.filter(function (it) { return it.id !== item.id; }).slice(0, 4);
+      related.forEach(function (r) {
+        var a = document.createElement('a');
+        a.href = 'Producto.html?id=' + r.id;
+        a.className = 'product-card';
+        var hasImg = !!(r.images && r.images.main);
+        a.innerHTML =
+          '<div class="product-photo sm"' + (hasImg ? ' style="background-image:' + bgFor(r.images.main) + '"' : '') + '>' + (hasImg ? '' : 'product photo') + '</div>' +
+          '<div class="product-name">' + r.name + '</div>' +
+          '<div class="product-price">' + r.price + '</div>';
+        relatedGrid.appendChild(a);
+      });
+    } catch (e) { /* related products are a nice-to-have; ignore failures */ }
+
+    renderThumbs();
+    renderMainImage();
+    renderFavBtn();
+
+    document.getElementById('pdpContent').classList.remove('hidden');
+  })();
+})();
+</script>
+</body>
+</html>

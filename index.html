@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ÉCLAT — Joyería de Lujo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+  body { background:#071F1A; }
+  .hero { position:relative; height:640px; display:flex; align-items:center; justify-content:flex-start; text-align:left; overflow:hidden; background-image:linear-gradient(90deg, rgba(2,6,4,0.88) 0%, rgba(2,6,4,0.55) 45%, rgba(2,6,4,0.15) 75%), linear-gradient(160deg, #0a2b23, #050f0c); background-size:cover; background-position:center; }
+  .hero-inner { position:relative; z-index:1; max-width:760px; padding:0 72px; }
+  .hero-eyebrow { font-size:13px; letter-spacing:3px; color:#C9A84C; margin-bottom:18px; font-weight:500; }
+  .hero-title { font-family:'Cormorant Garamond', serif; font-size:74px; font-weight:600; letter-spacing:1.5px; margin:0 0 20px; line-height:1.15; }
+  .hero-desc { font-size:15px; letter-spacing:1px; color:rgba(245,240,232,0.75); margin:0 0 36px; max-width:420px; }
+  .hero-cta { display:inline-block; background:#C9A84C; color:#071F1A; padding:16px 40px; font-size:13px; letter-spacing:2.5px; font-weight:500; border-radius:2px; transition:transform 0.35s ease, box-shadow 0.35s ease; }
+  .hero-cta:hover { transform:scale(1.03); box-shadow:0 0 28px rgba(201,168,76,0.55); color:#071F1A; }
+
+  .features-bar { background:#020604; display:grid; grid-template-columns:repeat(4,1fr); gap:24px; padding:36px 72px 44px; }
+  .feature { display:flex; align-items:flex-start; gap:14px; text-align:left; }
+  .feature-icon { flex-shrink:0; width:30px; height:30px; border:1px solid #C9A84C; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; color:#C9A84C; }
+  .feature-title { font-size:14px; letter-spacing:1.5px; font-weight:500; margin-bottom:5px; }
+  .feature-desc { font-size:13.5px; color:rgba(245,240,232,0.55); line-height:1.4; }
+
+  .collections { background:linear-gradient(0deg, #000000 0%, #04140f 50%, #04140f 100%); padding:100px 56px; text-align:center; }
+  .collections h2 { font-family:'Cormorant Garamond', serif; font-size:38px; letter-spacing:5px; margin:0 0 16px; }
+  .collections-rule { width:64px; height:2px; background:#C9A84C; margin:0 auto 64px; }
+  .collections-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:32px; max-width:1300px; margin:0 auto; }
+  .collection-item { display:flex; flex-direction:column; gap:18px; }
+  .collection-photo { aspect-ratio:301/340; background:linear-gradient(160deg, #071f19, #020604); background-size:cover; background-position:center; display:flex; align-items:center; justify-content:center; color:rgba(245,240,232,0.35); font-size:12px; letter-spacing:1.5px; font-family:monospace; }
+  .collection-name { font-size:15px; letter-spacing:3px; font-weight:500; }
+  .collection-link { font-size:12px; letter-spacing:2px; }
+
+  .subscribe { background:#000000; padding:70px 24px; text-align:center; }
+  .subscribe h3 { font-family:'Cormorant Garamond', serif; font-size:26px; letter-spacing:3px; margin:0 0 32px; font-weight:600; }
+  .subscribe-form { display:flex; justify-content:center; gap:0; max-width:480px; margin:0 auto; }
+  .subscribe-form input { flex:1; background:transparent; border:1px solid rgba(245,240,232,0.35); color:#F5F0E8; padding:16px 20px; font-size:13px; font-family:'Jost',sans-serif; letter-spacing:0.5px; outline:none; }
+  .subscribe-form button { background:#C9A84C; color:#071F1A; border:none; padding:0 30px; font-size:12px; letter-spacing:2px; font-weight:500; cursor:pointer; }
+
+  .footer-grid { display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:40px; max-width:1200px; margin:0 auto 56px; text-align:left; }
+  .footer-brand { font-family:'Cormorant Garamond', serif; font-size:26px; letter-spacing:5px; color:#C9A84C; margin-bottom:16px; }
+  .footer-tagline { font-size:13px; color:rgba(245,240,232,0.6); line-height:1.7; max-width:260px; }
+  .footer-col-title { font-size:12px; letter-spacing:2px; color:#C9A84C; margin-bottom:18px; }
+  .footer-links { display:flex; flex-direction:column; gap:12px; font-size:13px; }
+  .footer-links a { color:#F5F0E8; }
+  .footer-social { display:flex; gap:18px; font-size:16px; }
+  .footer-social span { display:flex; color:#F5F0E8; }
+  .footer-bottom { text-align:center; font-size:12px; color:rgba(245,240,232,0.45); padding-top:28px; border-top:1px solid rgba(201,168,76,0.15); }
+  .footer-bottom a { color:rgba(245,240,232,0.3); font-size:11px; }
+  .site-footer.home-footer { background:#000000; padding:72px 56px 32px; text-align:left; }
+
+  @media (max-width: 900px) {
+    .hero-title { font-size:44px; }
+    .hero-inner { padding:0 32px; }
+    .features-bar { grid-template-columns:1fr 1fr; padding:28px 32px; }
+    .collections-grid { grid-template-columns:1fr 1fr; }
+    .footer-grid { grid-template-columns:1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div id="navMount"></div>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-eyebrow" data-reveal>ELEVE SU ESENCIA</div>
+      <h1 class="hero-title" data-reveal style="transition-delay:100ms;">DETALLES QUE<br>HABLAN DE TI</h1>
+      <p class="hero-desc" data-reveal style="transition-delay:200ms;">Joyas diseñadas para quienes buscan más que belleza: buscan significado.</p>
+      <a href="#" class="hero-cta" data-reveal style="transition-delay:300ms;">DESCUBRIR COLECCIÓN &#8594;</a>
+    </div>
+  </section>
+
+  <section class="features-bar">
+    <div class="feature" data-reveal style="transition-delay:0ms;">
+      <div class="feature-icon">&#9670;</div>
+      <div><div class="feature-title">ORO 14K Y PLATA 925</div><div class="feature-desc">Materiales de más alta calidad</div></div>
+    </div>
+    <div class="feature" data-reveal style="transition-delay:100ms;">
+      <div class="feature-icon">&#9974;</div>
+      <div><div class="feature-title">GARANTÍA DE POR VIDA</div><div class="feature-desc">Su joya, con nosotros contigo</div></div>
+    </div>
+    <div class="feature" data-reveal style="transition-delay:200ms;">
+      <div class="feature-icon">&#9634;</div>
+      <div><div class="feature-title">ENVÍO SEGURO</div><div class="feature-desc">A todo México con seguro</div></div>
+    </div>
+    <div class="feature" data-reveal style="transition-delay:300ms;">
+      <div class="feature-icon">&#11034;</div>
+      <div><div class="feature-title">PRESENTACIÓN PREMIUM</div><div class="feature-desc">Cada pedido incluye empaque de lujo</div></div>
+    </div>
+  </section>
+
+  <section class="collections">
+    <h2 data-reveal>COLECCIONES</h2>
+    <div class="collections-rule" data-reveal style="transition-delay:150ms;"></div>
+    <div class="collections-grid">
+      <div class="collection-item" data-reveal style="transition-delay:0ms;">
+        <div class="collection-photo" data-cat="pulseras">product photo</div>
+        <div class="collection-name">PULSERAS</div>
+        <a class="collection-link" href="Pulseras.html">VER MÁS</a>
+      </div>
+      <div class="collection-item" data-reveal style="transition-delay:100ms;">
+        <div class="collection-photo" data-cat="collares">product photo</div>
+        <div class="collection-name">COLLARES</div>
+        <a class="collection-link" href="Collares.html">VER MÁS</a>
+      </div>
+      <div class="collection-item" data-reveal style="transition-delay:200ms;">
+        <div class="collection-photo" data-cat="anillos">product photo</div>
+        <div class="collection-name">ANILLOS</div>
+        <a class="collection-link" href="Anillos.html">VER MÁS</a>
+      </div>
+      <div class="collection-item" data-reveal style="transition-delay:300ms;">
+        <div class="collection-photo" data-cat="aretes">product photo</div>
+        <div class="collection-name">ARETES</div>
+        <a class="collection-link" href="Aretes.html">VER MÁS</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="subscribe">
+    <h3 data-reveal>SUSCRÍBETE Y OBTÉN 10% OFF</h3>
+    <div class="subscribe-form" data-reveal style="transition-delay:100ms;">
+      <input type="email" placeholder="Su correo electrónico" />
+      <button type="button">SUSCRIBIRME</button>
+    </div>
+  </section>
+
+  <footer class="site-footer home-footer">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">ÉCLAT</div>
+        <p class="footer-tagline">Joyería atemporal para personas que buscan algo más que belleza.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">TIENDA</div>
+        <div class="footer-links">
+          <a href="#">Todos los productos</a>
+          <a href="Pulseras.html">Pulseras</a>
+          <a href="Collares.html">Collares</a>
+          <a href="Anillos.html">Anillos</a>
+          <a href="Aretes.html">Aretes</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">INFORMACIÓN</div>
+        <div class="footer-links">
+          <a href="#">Envíos y devoluciones</a>
+          <a href="#">Términos y condiciones</a>
+          <a href="#">Política de privacidad</a>
+          <a href="#">Preguntas frecuentes</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">SÍGUENOS</div>
+        <div class="footer-social">
+          <span><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4.2"></circle><circle cx="17.2" cy="6.8" r="0.6" fill="currentColor" stroke="none"></circle></svg></span>
+          <span><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 8h2V4h-2c-2.2 0-4 1.8-4 4v2H9v4h2v8h4v-8h2.5l.5-4H15V8z"></path></svg></span>
+          <span><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 4v11a3 3 0 1 1-3-3"></path><path d="M13 4c0 3 2 5 5 5"></path></svg></span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2024 ÉCLAT. Todos los derechos reservados. · <a href="Admin.html">Admin</a></div>
+  </footer>
+</div>
+
+<script src="store.js"></script>
+<script src="nav-widgets.js"></script>
+<script src="reveal.js"></script>
+<script src="nav.js"></script>
+<script>
+  EclatNav.render(document.getElementById('navMount'), { active: 'inicio', accountMode: 'link' });
+
+  (async function () {
+    try {
+      var hero = await window.EclatStore.getSetting('hero_image');
+      if (hero && hero.value) {
+        var heroEl = document.querySelector('.hero');
+        heroEl.style.backgroundImage =
+          "linear-gradient(90deg, rgba(2,6,4,0.88) 0%, rgba(2,6,4,0.55) 45%, rgba(2,6,4,0.15) 75%), url(" + JSON.stringify(hero.value) + ")";
+      }
+    } catch (e) { /* keep default gradient background */ }
+
+    try {
+      var categories = await window.EclatStore.getCategories();
+      categories.forEach(function (c) {
+        if (!c.image) return;
+        var el = document.querySelector('.collection-photo[data-cat="' + c.id + '"]');
+        if (el) {
+          el.style.backgroundImage = 'url(' + JSON.stringify(c.image) + ')';
+          el.textContent = '';
+        }
+      });
+    } catch (e) { /* keep placeholder text */ }
+  })();
+</script>
+</body>
+</html>

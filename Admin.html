@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ÉCLAT — Panel de Administrador</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #000000; }
+  a { color: #C9A84C; text-decoration: none; }
+  a:hover { color: inherit; }
+  input::placeholder, textarea::placeholder { color: rgba(245,240,232,0.35); }
+  input, select, textarea, button { font-family: 'Jost', sans-serif; }
+
+  .page { background:#071F1A; color:#F5F0E8; font-family:'Jost', sans-serif; min-height:100vh; }
+
+  .topnav { background:#000000; display:flex; align-items:center; justify-content:space-between; gap:24px; padding:24px 32px; border-bottom:1px solid rgba(201,168,76,0.25); }
+  .brand { font-family:'Cormorant Garamond', serif; font-size:24px; letter-spacing:5px; color:#C9A84C; font-weight:600; }
+  .brand span { color:rgba(245,240,232,0.4); font-size:13px; letter-spacing:2px; font-family:'Jost',sans-serif; }
+  .back-link { font-size:12.5px; letter-spacing:1.5px; color:rgba(245,240,232,0.6); }
+
+  .lock-section { min-height:calc(100vh - 89px); display:flex; align-items:center; justify-content:center; padding:40px 24px; }
+  .lock-box { width:100%; max-width:380px; text-align:center; }
+  .eyebrow { font-size:13px; letter-spacing:3px; color:#C9A84C; margin-bottom:14px; }
+  .lock-title { font-family:'Cormorant Garamond', serif; font-size:30px; letter-spacing:2px; margin:0 0 28px; font-weight:600; }
+  .field-input { width:100%; box-sizing:border-box; background:#0a0a0a; color:#F5F0E8; border:1px solid rgba(245,240,232,0.25); padding:14px 16px; font-size:14px; font-family:'Jost',sans-serif; outline:none; margin-bottom:14px; }
+  .field-input.error { border-color:#e0a06a; }
+  .error-text { font-size:12px; color:#e0a06a; margin-bottom:14px; }
+  .success-text { font-size:12px; color:#7fbf9e; }
+  .gold-btn { width:100%; background:#C9A84C; color:#071F1A; border:none; padding:15px 0; font-size:13px; letter-spacing:2.5px; font-weight:500; cursor:pointer; }
+  .gold-btn:hover { background:#ddbb5a; }
+  .hint { font-size:11.5px; color:rgba(245,240,232,0.35); margin-top:18px; }
+
+  .admin-section { padding:48px 56px 100px; }
+  .admin-wrap { max-width:1180px; margin:0 auto; }
+  .h1 { font-family:'Cormorant Garamond', serif; font-size:32px; letter-spacing:2px; margin:0 0 6px; font-weight:600; }
+  .rule { width:52px; height:1px; background:rgba(201,168,76,0.4); margin-bottom:40px; }
+
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:start; }
+  .form-col { display:flex; flex-direction:column; gap:18px; }
+  .label-sm { font-size:11px; letter-spacing:2px; color:rgba(245,240,232,0.6); margin-bottom:8px; }
+  .form-input { width:100%; box-sizing:border-box; background:#0a0a0a; color:#F5F0E8; border:1px solid rgba(245,240,232,0.25); padding:13px 15px; font-size:13.5px; font-family:'Jost',sans-serif; outline:none; }
+  textarea.form-input { resize:vertical; }
+
+  .checkbox-row { display:flex; align-items:center; gap:10px; }
+  .checkbox-row input { width:16px; height:16px; accent-color:#C9A84C; }
+  .checkbox-label { font-size:12.5px; letter-spacing:1px; color:rgba(245,240,232,0.75); }
+
+  .photo-row { display:flex; align-items:center; gap:14px; }
+  .photo-preview { width:72px; height:72px; background:#0a0a0a; border:1px solid rgba(245,240,232,0.25); flex-shrink:0; background-size:cover; background-position:center; }
+  .upload-label { cursor:pointer; font-size:12px; letter-spacing:1px; color:#C9A84C; border:1px solid rgba(201,168,76,0.4); padding:10px 16px; display:inline-block; }
+
+  .detail-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+  .detail-slot { cursor:pointer; display:block; }
+  .detail-preview { width:100%; aspect-ratio:1; background:#0a0a0a; border:1px dashed rgba(245,240,232,0.3); display:flex; align-items:center; justify-content:center; font-size:9.5px; letter-spacing:0.5px; color:rgba(245,240,232,0.35); text-align:center; background-size:cover; background-position:center; }
+
+  .cat-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .cat-tile { position:relative; border:1px solid rgba(201,168,76,0.22); background:linear-gradient(160deg, rgba(201,168,76,0.06), transparent); padding:30px 22px; cursor:pointer; transition:border-color 0.25s ease, background 0.25s ease, transform 0.25s ease; }
+  .cat-tile:hover { border-color:#C9A84C; background:linear-gradient(160deg, rgba(201,168,76,0.14), transparent); transform:translateY(-2px); }
+  .cat-tile .cat-label { font-family:'Cormorant Garamond', serif; font-size:23px; letter-spacing:2px; font-weight:600; margin-bottom:8px; }
+  .cat-tile .cat-count { font-size:11.5px; letter-spacing:0.5px; color:rgba(245,240,232,0.5); }
+  .cat-tile .cat-arrow { position:absolute; bottom:20px; right:22px; font-size:18px; color:#C9A84C; }
+
+  .list-header { display:flex; align-items:baseline; gap:16px; margin-bottom:22px; padding-bottom:18px; border-bottom:1px solid rgba(201,168,76,0.2); }
+  .back-btn { background:transparent; border:none; color:rgba(245,240,232,0.55); font-size:12px; letter-spacing:1px; padding:0; cursor:pointer; }
+  .back-btn:hover { color:#C9A84C; }
+  .list-title { font-family:'Cormorant Garamond', serif; font-size:22px; letter-spacing:1.5px; font-weight:600; }
+  .list-count { font-size:11.5px; color:rgba(245,240,232,0.45); letter-spacing:0.5px; }
+
+  .product-list { display:flex; flex-direction:column; gap:12px; max-height:900px; overflow-y:auto; padding-right:4px; }
+  .product-row { border:1px solid rgba(245,240,232,0.12); background:rgba(255,255,255,0.015); padding:16px 18px; transition:border-color 0.2s ease; }
+  .product-row:hover { border-color:rgba(201,168,76,0.35); }
+
+  .row-view { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+  .row-left { display:flex; gap:14px; align-items:center; min-width:0; }
+  .row-thumb { width:50px; height:50px; background:#0a0a0a; border:1px solid rgba(201,168,76,0.25); flex-shrink:0; background-size:cover; background-position:center; }
+  .row-name { font-family:'Cormorant Garamond', serif; font-size:16px; font-weight:600; letter-spacing:0.5px; margin-bottom:3px; }
+  .row-price { font-size:12.5px; color:rgba(245,240,232,0.55); }
+  .row-price .offer { color:#C9A84C; }
+  .row-price .strike { color:rgba(245,240,232,0.4); text-decoration:line-through; font-size:11px; }
+  .row-actions { display:flex; gap:10px; flex-shrink:0; }
+  .edit-btn { background:transparent; border:1px solid rgba(201,168,76,0.4); color:#C9A84C; font-size:10.5px; letter-spacing:1px; padding:9px 14px; cursor:pointer; white-space:nowrap; transition:background 0.2s ease; }
+  .edit-btn:hover { background:rgba(201,168,76,0.12); }
+  .remove-btn { background:transparent; border:none; color:rgba(245,240,232,0.4); font-size:10.5px; letter-spacing:1px; cursor:pointer; white-space:nowrap; }
+  .remove-btn:hover { color:#e0a06a; }
+
+  .edit-form { display:flex; flex-direction:column; gap:12px; }
+  .edit-tag { font-size:10.5px; letter-spacing:1.5px; color:#C9A84C; }
+  .edit-input { width:100%; box-sizing:border-box; background:#0a0a0a; color:#F5F0E8; border:1px solid rgba(245,240,232,0.25); padding:11px 13px; font-size:13px; font-family:'Jost',sans-serif; outline:none; }
+  textarea.edit-input { resize:vertical; }
+  .edit-photo-row { display:flex; align-items:center; gap:14px; }
+  .edit-photo-preview { width:56px; height:56px; background:#0a0a0a; border:1px solid rgba(245,240,232,0.25); flex-shrink:0; background-size:cover; background-position:center; }
+  .edit-upload-label { cursor:pointer; font-size:11px; letter-spacing:1px; color:#C9A84C; border:1px solid rgba(201,168,76,0.4); padding:8px 12px; display:inline-block; }
+  .edit-detail-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+  .edit-detail-preview { width:100%; aspect-ratio:1; background:#0a0a0a; border:1px dashed rgba(245,240,232,0.3); display:flex; align-items:center; justify-content:center; font-size:8.5px; color:rgba(245,240,232,0.35); text-align:center; background-size:cover; background-position:center; }
+  .edit-actions { display:flex; gap:10px; margin-top:4px; }
+  .save-btn { flex:1; background:#C9A84C; color:#071F1A; border:none; padding:11px 0; font-size:11.5px; letter-spacing:1.5px; font-weight:500; cursor:pointer; }
+  .cancel-btn { flex:1; background:transparent; border:1px solid rgba(245,240,232,0.25); color:#F5F0E8; padding:11px 0; font-size:11.5px; letter-spacing:1.5px; cursor:pointer; }
+
+  .hidden { display:none !important; }
+
+  @media (max-width: 860px) {
+    .admin-section { padding:32px 20px 80px; }
+    .grid-2 { grid-template-columns:1fr; }
+    .cat-grid { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <nav class="topnav">
+    <div class="brand">ÉCLAT <span>ADMIN</span></div>
+    <a class="back-link" href="index.html">&#8592; Volver a la tienda</a>
+  </nav>
+
+  <section id="lockScreen" class="lock-section">
+    <div class="lock-box">
+      <div class="eyebrow">ACCESO RESTRINGIDO</div>
+      <h1 class="lock-title">PANEL DE ADMINISTRADOR</h1>
+      <input type="password" id="passwordInput" class="field-input" placeholder="Contraseña de administrador" />
+      <div id="passwordError" class="error-text hidden">Contraseña incorrecta.</div>
+      <button id="unlockBtn" class="gold-btn">ENTRAR</button>
+      <div class="hint">Prototipo — contraseña: eclat2024</div>
+    </div>
+  </section>
+
+  <section id="adminPanel" class="admin-section hidden">
+    <div class="admin-wrap">
+      <div class="eyebrow">IDENTIDAD DE LA TIENDA</div>
+      <h1 class="h1">IMÁGENES DE LA TIENDA</h1>
+      <div class="rule"></div>
+
+      <div style="margin-bottom:48px;">
+        <div class="label-sm" style="margin-bottom:10px;">IMAGEN DE PORTADA (BANNER PRINCIPAL)</div>
+        <div style="max-width:600px;">
+          <div id="heroPreview" style="width:100%; aspect-ratio:2.35; background:#0a0a0a; border:1px solid rgba(245,240,232,0.25); background-size:cover; background-position:center;"></div>
+          <div style="display:flex; gap:10px; margin-top:14px;">
+            <label class="upload-label" style="text-align:center; flex:1;">
+              SUBIR IMAGEN
+              <input type="file" id="heroImageInput" accept="image/*" class="hidden" />
+            </label>
+            <button type="button" id="saveHeroBtn" class="gold-btn" style="width:auto; flex:1; padding:10px 20px; font-size:11px;">GUARDAR PORTADA</button>
+          </div>
+        </div>
+        <div id="heroSuccess" class="success-text hidden" style="margin-top:10px;">Portada actualizada. Ya es visible en el inicio.</div>
+      </div>
+
+      <div style="margin-bottom:8px;">
+        <div class="label-sm" style="margin-bottom:14px;">FOTOS DE CATEGORÍA (sección "Colecciones" del inicio)</div>
+        <div class="cat-grid" id="categoryImageGrid"></div>
+      </div>
+    </div>
+
+    <div class="admin-wrap" style="margin-top:64px; padding-top:48px; border-top:1px solid rgba(201,168,76,0.15);">
+      <div class="eyebrow">GESTIÓN DE CATÁLOGO</div>
+      <h1 class="h1">AGREGAR PRODUCTO</h1>
+      <div class="rule"></div>
+
+      <div class="grid-2">
+        <div>
+          <div class="form-col">
+            <div>
+              <div class="label-sm">CATEGORÍA</div>
+              <select id="formCat" class="form-input">
+                <option value="pulseras">Pulseras</option>
+                <option value="collares">Collares</option>
+                <option value="anillos">Anillos</option>
+                <option value="aretes">Aretes</option>
+              </select>
+            </div>
+            <div>
+              <div class="label-sm">NOMBRE DEL PRODUCTO</div>
+              <input type="text" id="formName" class="form-input" placeholder="Ej. PULSERA VENUS" />
+            </div>
+            <div>
+              <div class="label-sm">PRECIO (MXN)</div>
+              <input type="text" id="formPrice" class="form-input" placeholder="Ej. 2,890" />
+            </div>
+            <div>
+              <div class="label-sm">DESCRIPCIÓN (OPCIONAL)</div>
+              <textarea id="formDesc" class="form-input" placeholder="Descripción breve de la pieza..." rows="4"></textarea>
+            </div>
+
+            <div class="checkbox-row">
+              <input type="checkbox" id="formOfferOn" />
+              <div class="checkbox-label">MARCAR COMO OFERTA</div>
+            </div>
+            <div id="formOfferPriceWrap" class="hidden">
+              <div class="label-sm">PRECIO DE OFERTA (MXN)</div>
+              <input type="text" id="formOfferPrice" class="form-input" placeholder="Ej. 2,200" />
+            </div>
+
+            <div>
+              <div class="label-sm" style="margin-bottom:10px;">FOTO PRINCIPAL</div>
+              <div class="photo-row">
+                <div id="formMainPreview" class="photo-preview"></div>
+                <label class="upload-label">
+                  SUBIR IMAGEN
+                  <input type="file" id="formMainImage" accept="image/*" class="hidden" />
+                </label>
+              </div>
+            </div>
+
+            <div>
+              <div class="label-sm" style="margin-bottom:10px;">FOTOS DE DETALLE (4)</div>
+              <div class="detail-grid" id="formDetailGrid"></div>
+            </div>
+
+            <div id="formError" class="error-text hidden">Complete el nombre y el precio del producto.</div>
+            <div id="formSuccess" class="success-text hidden">Producto agregado. Ya es visible para los clientes.</div>
+            <button id="addProductBtn" class="gold-btn" style="margin-top:8px;">AGREGAR PRODUCTO</button>
+          </div>
+        </div>
+
+        <div>
+          <div id="categoryGrid">
+            <div class="eyebrow" style="margin-bottom:4px;">EXPLORAR POR CATEGORÍA</div>
+            <div id="catalogCount" style="font-size:12px; color:rgba(245,240,232,0.45); margin-bottom:22px;"></div>
+            <div class="cat-grid" id="catTiles"></div>
+          </div>
+
+          <div id="productListPanel" class="hidden">
+            <div class="list-header">
+              <button id="backToCatBtn" class="back-btn">&#8592; CATEGORÍAS</button>
+              <div id="selectedCatLabel" class="list-title"></div>
+              <div id="selectedCatCount" class="list-count"></div>
+            </div>
+            <div class="product-list" id="productList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script src="store.js"></script>
+<script src="cropper.js"></script>
+<script>
+(function () {
+  var ADMIN_PASSWORD = 'eclat2024';
+  var PLACEHOLDER_BG = '#0a0a0a';
+
+  function readAsDataUrl(file, cb) {
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function () { cb(reader.result); };
+    reader.readAsDataURL(file);
+  }
+
+  function bgFor(el, url) {
+    if (url) {
+      el.style.backgroundImage = 'url(' + JSON.stringify(url) + ')';
+      el.style.backgroundColor = PLACEHOLDER_BG;
+    } else {
+      el.style.backgroundImage = 'none';
+      el.style.backgroundColor = PLACEHOLDER_BG;
+    }
+  }
+
+  var state = {
+    selectedCat: null,
+    editingId: null,
+    formImages: { main: '', details: ['', '', '', ''] },
+    editImages: { main: '', details: ['', '', '', ''] },
+  };
+
+  var adminKey = null;
+
+  // ---------- Lock screen ----------
+  var lockScreen = document.getElementById('lockScreen');
+  var adminPanel = document.getElementById('adminPanel');
+  var passwordInput = document.getElementById('passwordInput');
+  var passwordError = document.getElementById('passwordError');
+  var unlockBtn = document.getElementById('unlockBtn');
+
+  function handleUnlock() {
+    if (passwordInput.value === ADMIN_PASSWORD) {
+      adminKey = passwordInput.value;
+      lockScreen.classList.add('hidden');
+      adminPanel.classList.remove('hidden');
+      renderCategoryGrid();
+      loadHeroImage();
+      loadCategoryImages();
+    } else {
+      passwordError.classList.remove('hidden');
+      passwordInput.classList.add('error');
+    }
+  }
+  unlockBtn.addEventListener('click', handleUnlock);
+  passwordInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') handleUnlock(); });
+  passwordInput.addEventListener('input', function () {
+    passwordError.classList.add('hidden');
+    passwordInput.classList.remove('error');
+  });
+
+  // ---------- Store identity: hero banner + category photos ----------
+  var HERO_RATIO = 2.35; // matches .hero's typical desktop framing
+  var CATEGORY_RATIO = 301 / 340; // matches .collection-photo on the home page
+
+  var heroPreview = document.getElementById('heroPreview');
+  var heroImageInput = document.getElementById('heroImageInput');
+  var heroSuccess = document.getElementById('heroSuccess');
+  var saveHeroBtn = document.getElementById('saveHeroBtn');
+  var pendingHeroImage = null;
+
+  async function loadHeroImage() {
+    try {
+      var setting = await window.EclatStore.getSetting('hero_image');
+      pendingHeroImage = setting.value || '';
+      bgFor(heroPreview, pendingHeroImage);
+    } catch (e) { /* ignore, keep empty preview */ }
+  }
+
+  heroImageInput.addEventListener('change', function (e) {
+    var file = e.target.files && e.target.files[0];
+    if (!file) return;
+    window.EclatCropper.open({
+      file: file,
+      ratio: HERO_RATIO,
+      outputWidth: 1600,
+      title: 'Ajustar imagen de portada',
+      onDone: function (dataUrl) {
+        pendingHeroImage = dataUrl;
+        bgFor(heroPreview, dataUrl);
+      },
+      onCancel: function () { heroImageInput.value = ''; },
+    });
+  });
+
+  saveHeroBtn.addEventListener('click', async function () {
+    try {
+      await window.EclatStore.updateSetting(adminKey, 'hero_image', pendingHeroImage || '');
+      heroSuccess.classList.remove('hidden');
+      setTimeout(function () { heroSuccess.classList.add('hidden'); }, 2500);
+    } catch (e) {
+      alert(e.message || 'No se pudo guardar la portada.');
+    }
+  });
+
+  var categoryImageGrid = document.getElementById('categoryImageGrid');
+  var pendingCategoryImages = {};
+
+  async function loadCategoryImages() {
+    var categories;
+    try {
+      categories = await window.EclatStore.getCategories();
+    } catch (e) {
+      categoryImageGrid.innerHTML = '<div class="error-text">No se pudo cargar las categorías.</div>';
+      return;
+    }
+    categoryImageGrid.innerHTML = '';
+    categories.forEach(function (c) {
+      pendingCategoryImages[c.id] = c.image || '';
+
+      var tile = document.createElement('div');
+      tile.style.cssText = 'border:1px solid rgba(201,168,76,0.22); padding:18px;';
+      tile.innerHTML =
+        '<div style="font-size:13px; letter-spacing:1px; font-weight:500; margin-bottom:12px;">' + c.label + '</div>' +
+        '<div class="cat-image-preview" style="width:100%; aspect-ratio:' + CATEGORY_RATIO + '; background:#0a0a0a; border:1px solid rgba(245,240,232,0.25); background-size:cover; background-position:center; margin-bottom:12px;"></div>' +
+        '<div style="display:flex; gap:8px;">' +
+          '<label class="upload-label" style="flex:1; text-align:center; font-size:10.5px; padding:9px 8px;">SUBIR<input type="file" accept="image/*" class="hidden cat-image-input" /></label>' +
+          '<button type="button" class="gold-btn cat-image-save" style="width:auto; flex:1; padding:9px 8px; font-size:10.5px;">GUARDAR</button>' +
+        '</div>' +
+        '<div class="success-text cat-image-success hidden" style="margin-top:8px;">Guardado.</div>';
+
+      var preview = tile.querySelector('.cat-image-preview');
+      bgFor(preview, pendingCategoryImages[c.id]);
+
+      var catFileInput = tile.querySelector('.cat-image-input');
+      catFileInput.addEventListener('change', function (e) {
+        var file = e.target.files && e.target.files[0];
+        if (!file) return;
+        window.EclatCropper.open({
+          file: file,
+          ratio: CATEGORY_RATIO,
+          outputWidth: 700,
+          title: 'Ajustar foto de ' + c.label,
+          onDone: function (dataUrl) {
+            pendingCategoryImages[c.id] = dataUrl;
+            bgFor(preview, dataUrl);
+          },
+          onCancel: function () { catFileInput.value = ''; },
+        });
+      });
+
+      var successEl = tile.querySelector('.cat-image-success');
+      tile.querySelector('.cat-image-save').addEventListener('click', async function () {
+        try {
+          await window.EclatStore.updateCategoryImage(adminKey, c.id, pendingCategoryImages[c.id] || '');
+          successEl.classList.remove('hidden');
+          setTimeout(function () { successEl.classList.add('hidden'); }, 2500);
+        } catch (e) {
+          alert(e.message || 'No se pudo guardar la foto de categoría.');
+        }
+      });
+
+      categoryImageGrid.appendChild(tile);
+    });
+  }
+
+  // ---------- Add product form ----------
+  var formCat = document.getElementById('formCat');
+  var formName = document.getElementById('formName');
+  var formPrice = document.getElementById('formPrice');
+  var formDesc = document.getElementById('formDesc');
+  var formOfferOn = document.getElementById('formOfferOn');
+  var formOfferPriceWrap = document.getElementById('formOfferPriceWrap');
+  var formOfferPrice = document.getElementById('formOfferPrice');
+  var formMainPreview = document.getElementById('formMainPreview');
+  var formMainImage = document.getElementById('formMainImage');
+  var formDetailGrid = document.getElementById('formDetailGrid');
+  var formError = document.getElementById('formError');
+  var formSuccess = document.getElementById('formSuccess');
+  var addProductBtn = document.getElementById('addProductBtn');
+
+  formOfferOn.addEventListener('change', function () {
+    formOfferPriceWrap.classList.toggle('hidden', !formOfferOn.checked);
+  });
+
+  formMainImage.addEventListener('change', function (e) {
+    var file = e.target.files && e.target.files[0];
+    readAsDataUrl(file, function (url) {
+      state.formImages.main = url;
+      bgFor(formMainPreview, url);
+    });
+  });
+
+  function renderFormDetailGrid() {
+    formDetailGrid.innerHTML = '';
+    for (var i = 0; i < 4; i++) {
+      (function (i) {
+        var label = document.createElement('label');
+        label.className = 'detail-slot';
+        var preview = document.createElement('div');
+        preview.className = 'detail-preview';
+        preview.textContent = state.formImages.details[i] ? '' : ('DETALLE ' + (i + 1));
+        bgFor(preview, state.formImages.details[i]);
+        var input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.className = 'hidden';
+        input.addEventListener('change', function (e) {
+          var file = e.target.files && e.target.files[0];
+          readAsDataUrl(file, function (url) {
+            state.formImages.details[i] = url;
+            renderFormDetailGrid();
+          });
+        });
+        label.appendChild(preview);
+        label.appendChild(input);
+        formDetailGrid.appendChild(label);
+      })(i);
+    }
+  }
+  renderFormDetailGrid();
+
+  function resetForm() {
+    formName.value = '';
+    formPrice.value = '';
+    formDesc.value = '';
+    formOfferOn.checked = false;
+    formOfferPrice.value = '';
+    formOfferPriceWrap.classList.add('hidden');
+    state.formImages = { main: '', details: ['', '', '', ''] };
+    bgFor(formMainPreview, '');
+    renderFormDetailGrid();
+  }
+
+  addProductBtn.addEventListener('click', async function () {
+    var name = formName.value.trim();
+    var priceRaw = formPrice.value.trim();
+    if (!name || !priceRaw) {
+      formError.textContent = 'Complete el nombre y el precio del producto.';
+      formError.classList.remove('hidden');
+      formSuccess.classList.add('hidden');
+      return;
+    }
+    var priceNum = Number(priceRaw.replace(/[^0-9.]/g, ''));
+    var offerPriceNum = formOfferOn.checked ? Number(formOfferPrice.value.replace(/[^0-9.]/g, '')) : null;
+
+    try {
+      await window.EclatStore.addProduct(adminKey, {
+        cat: formCat.value,
+        name: name.toUpperCase(),
+        price: priceNum,
+        desc: formDesc.value.trim(),
+        offer: formOfferOn.checked,
+        offerPrice: offerPriceNum,
+        images: state.formImages,
+      });
+      formError.classList.add('hidden');
+      resetForm();
+      formSuccess.classList.remove('hidden');
+      setTimeout(function () { formSuccess.classList.add('hidden'); }, 2500);
+      await refreshRightPanel();
+    } catch (e) {
+      formError.textContent = e.message || 'No se pudo agregar el producto.';
+      formError.classList.remove('hidden');
+      formSuccess.classList.add('hidden');
+    }
+  });
+
+  // ---------- Right panel: categories / product list ----------
+  var categoryGrid = document.getElementById('categoryGrid');
+  var catalogCount = document.getElementById('catalogCount');
+  var catTiles = document.getElementById('catTiles');
+  var productListPanel = document.getElementById('productListPanel');
+  var backToCatBtn = document.getElementById('backToCatBtn');
+  var selectedCatLabel = document.getElementById('selectedCatLabel');
+  var selectedCatCount = document.getElementById('selectedCatCount');
+  var productList = document.getElementById('productList');
+
+  async function refreshRightPanel() {
+    if (state.selectedCat) {
+      await renderProductList();
+    } else {
+      await renderCategoryGrid();
+    }
+  }
+
+  async function renderCategoryGrid() {
+    productListPanel.classList.add('hidden');
+    categoryGrid.classList.remove('hidden');
+    var categories;
+    try {
+      categories = await window.EclatStore.getCategories();
+    } catch (e) {
+      catTiles.innerHTML = '<div class="error-text">No se pudo cargar el catálogo. Verifique que el servidor esté corriendo.</div>';
+      return;
+    }
+    var total = categories.reduce(function (sum, c) { return sum + c.count; }, 0);
+    catalogCount.textContent = total + ' productos en catálogo';
+    catTiles.innerHTML = '';
+    categories.forEach(function (c) {
+      var tile = document.createElement('div');
+      tile.className = 'cat-tile';
+      tile.innerHTML =
+        '<div class="cat-label">' + c.label + '</div>' +
+        '<div class="cat-count">' + c.count + ' productos</div>' +
+        '<div class="cat-arrow">&#8594;</div>';
+      tile.addEventListener('click', function () {
+        state.selectedCat = c.id;
+        state.selectedCatLabel = c.label;
+        state.editingId = null;
+        renderProductList();
+      });
+      catTiles.appendChild(tile);
+    });
+  }
+
+  backToCatBtn.addEventListener('click', function () {
+    state.selectedCat = null;
+    state.editingId = null;
+    renderCategoryGrid();
+  });
+
+  function startEdit(p) {
+    state.editingId = p.id;
+    state.editImages = { main: p.images.main || '', details: (p.images.details || ['', '', '', '']).slice() };
+    renderProductList();
+  }
+
+  function cancelEdit() {
+    state.editingId = null;
+    renderProductList();
+  }
+
+  async function saveEdit(id) {
+    var nameEl = document.getElementById('editName');
+    var priceEl = document.getElementById('editPrice');
+    var descEl = document.getElementById('editDesc');
+    var offerOnEl = document.getElementById('editOfferOn');
+    var offerPriceEl = document.getElementById('editOfferPrice');
+    var priceNum = Number(priceEl.value.replace(/[^0-9.]/g, ''));
+    var offerPriceNum = offerOnEl.checked && offerPriceEl ? Number(offerPriceEl.value.replace(/[^0-9.]/g, '')) : null;
+
+    try {
+      await window.EclatStore.updateProduct(adminKey, id, {
+        name: nameEl.value.trim().toUpperCase(),
+        price: priceNum,
+        desc: descEl.value.trim(),
+        offer: offerOnEl.checked,
+        offerPrice: offerPriceNum,
+        images: state.editImages,
+      });
+      state.editingId = null;
+      renderProductList();
+    } catch (e) {
+      alert(e.message || 'No se pudo guardar el producto.');
+    }
+  }
+
+  function renderEditDetailGrid(container) {
+    container.innerHTML = '';
+    for (var i = 0; i < 4; i++) {
+      (function (i) {
+        var label = document.createElement('label');
+        label.className = 'detail-slot';
+        var preview = document.createElement('div');
+        preview.className = 'edit-detail-preview';
+        preview.textContent = state.editImages.details[i] ? '' : ('DET. ' + (i + 1));
+        bgFor(preview, state.editImages.details[i]);
+        var input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.className = 'hidden';
+        input.addEventListener('change', function (e) {
+          var file = e.target.files && e.target.files[0];
+          readAsDataUrl(file, function (url) {
+            state.editImages.details[i] = url;
+            renderEditDetailGrid(container);
+          });
+        });
+        label.appendChild(preview);
+        label.appendChild(input);
+        container.appendChild(label);
+      })(i);
+    }
+  }
+
+  async function renderProductList() {
+    categoryGrid.classList.add('hidden');
+    productListPanel.classList.remove('hidden');
+    var cat = state.selectedCat;
+    var products;
+    try {
+      products = await window.EclatStore.getProducts(cat);
+    } catch (e) {
+      productList.innerHTML = '<div class="error-text">No se pudo cargar el catálogo. Verifique que el servidor esté corriendo.</div>';
+      return;
+    }
+
+    selectedCatLabel.textContent = state.selectedCatLabel || cat;
+    selectedCatCount.textContent = products.length + ' productos';
+
+    productList.innerHTML = '';
+    products.forEach(function (p) {
+      var row = document.createElement('div');
+      row.className = 'product-row';
+
+      if (state.editingId === p.id) {
+        row.innerHTML =
+          '<div class="edit-form">' +
+            '<div class="edit-tag">' + p.catLabel + ' — EDITANDO</div>' +
+            '<input type="text" id="editName" class="edit-input" placeholder="Nombre" value="' + escapeHtml(p.name) + '" />' +
+            '<input type="text" id="editPrice" class="edit-input" placeholder="Precio" value="' + escapeHtml(p.price) + '" />' +
+            '<textarea id="editDesc" class="edit-input" rows="3" placeholder="Descripción">' + escapeHtml(p.desc) + '</textarea>' +
+            '<div class="checkbox-row">' +
+              '<input type="checkbox" id="editOfferOn" ' + (p.offer ? 'checked' : '') + ' />' +
+              '<div class="checkbox-label">MARCAR COMO OFERTA</div>' +
+            '</div>' +
+            '<div id="editOfferPriceWrap" class="' + (p.offer ? '' : 'hidden') + '">' +
+              '<input type="text" id="editOfferPrice" class="edit-input" placeholder="Precio de oferta" value="' + escapeHtml(p.offerPrice) + '" />' +
+            '</div>' +
+            '<div class="edit-photo-row">' +
+              '<div id="editMainPreview" class="edit-photo-preview"></div>' +
+              '<label class="edit-upload-label">CAMBIAR FOTO PRINCIPAL' +
+                '<input type="file" id="editMainImage" accept="image/*" class="hidden" />' +
+              '</label>' +
+            '</div>' +
+            '<div class="edit-detail-grid" id="editDetailGrid"></div>' +
+            '<div class="edit-actions">' +
+              '<button id="saveEditBtn" class="save-btn">GUARDAR</button>' +
+              '<button id="cancelEditBtn" class="cancel-btn">CANCELAR</button>' +
+            '</div>' +
+          '</div>';
+
+        productList.appendChild(row);
+
+        var editMainPreview = row.querySelector('#editMainPreview');
+        bgFor(editMainPreview, state.editImages.main);
+        row.querySelector('#editMainImage').addEventListener('change', function (e) {
+          var file = e.target.files && e.target.files[0];
+          readAsDataUrl(file, function (url) {
+            state.editImages.main = url;
+            bgFor(editMainPreview, url);
+          });
+        });
+        renderEditDetailGrid(row.querySelector('#editDetailGrid'));
+
+        var offerOnEl = row.querySelector('#editOfferOn');
+        var offerPriceWrap = row.querySelector('#editOfferPriceWrap');
+        offerOnEl.addEventListener('change', function () {
+          offerPriceWrap.classList.toggle('hidden', !offerOnEl.checked);
+        });
+
+        row.querySelector('#saveEditBtn').addEventListener('click', function () { saveEdit(p.id); });
+        row.querySelector('#cancelEditBtn').addEventListener('click', cancelEdit);
+      } else {
+        var priceHtml = p.offer
+          ? '<span class="offer">' + escapeHtml(p.offerPrice) + '</span> <span class="strike">' + escapeHtml(p.price) + '</span>'
+          : escapeHtml(p.price);
+
+        row.innerHTML =
+          '<div class="row-view">' +
+            '<div class="row-left">' +
+              '<div class="row-thumb"></div>' +
+              '<div style="min-width:0;">' +
+                '<div class="row-name">' + escapeHtml(p.name) + '</div>' +
+                '<div class="row-price">' + priceHtml + '</div>' +
+              '</div>' +
+            '</div>' +
+            '<div class="row-actions">' +
+              '<button class="edit-btn">EDITAR</button>' +
+              (p.custom ? '<button class="remove-btn">ELIMINAR</button>' : '') +
+            '</div>' +
+          '</div>';
+
+        productList.appendChild(row);
+        bgFor(row.querySelector('.row-thumb'), p.images && p.images.main);
+        row.querySelector('.edit-btn').addEventListener('click', function () { startEdit(p); });
+        var removeBtn = row.querySelector('.remove-btn');
+        if (removeBtn) {
+          removeBtn.addEventListener('click', async function () {
+            try {
+              await window.EclatStore.removeProduct(adminKey, p.id);
+              renderProductList();
+            } catch (e) {
+              alert(e.message || 'No se pudo eliminar el producto.');
+            }
+          });
+        }
+      }
+    });
+  }
+
+  function escapeHtml(str) {
+    return String(str == null ? '' : str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+})();
+</script>
+</body>
+</html>

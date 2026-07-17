@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ÉCLAT — Carrito</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+  body { background:#000000; }
+  .cart-section { position:relative; background:linear-gradient(0deg, #000000 0%, #04140f 60%, #04140f 100%); min-height:calc(100vh - 90px); padding:40px 56px 100px; }
+  .cart-header { text-align:center; margin-bottom:56px; }
+  .cart-header h1 { font-family:'Cormorant Garamond', serif; font-size:34px; letter-spacing:2px; margin:0 0 16px; font-weight:600; }
+  .cart-header .rule { width:56px; height:2px; background:#C9A84C; margin:0 auto; }
+
+  .cart-grid { display:grid; grid-template-columns:1fr 340px; gap:48px; max-width:1000px; margin:0 auto; align-items:start; }
+  .cart-items { display:flex; flex-direction:column; gap:28px; }
+  .cart-item { display:grid; grid-template-columns:110px 1fr auto; gap:20px; align-items:center; border-bottom:1px solid rgba(245,240,232,0.1); padding-bottom:24px; }
+  .cart-item-photo { display:block; height:110px; background:linear-gradient(160deg, #0a2b23, #050f0c); background-size:cover; background-position:center; }
+  .cart-item-name { display:block; font-size:14px; letter-spacing:1.5px; font-weight:500; color:#F5F0E8; margin-bottom:8px; }
+  .cart-item-price { font-size:13px; color:#C9A84C; margin-bottom:14px; }
+  .cart-item-remove { background:transparent; border:none; color:rgba(245,240,232,0.5); font-size:12px; letter-spacing:1px; cursor:pointer; align-self:start; }
+
+  .qty-box-sm { display:flex; align-items:center; gap:0; border:1px solid rgba(245,240,232,0.25); width:110px; }
+  .qty-box-sm button { flex:1; background:transparent; border:none; color:#F5F0E8; font-size:15px; padding:8px 0; cursor:pointer; }
+  .qty-box-sm .qty-val { flex:1; text-align:center; font-size:13px; }
+
+  .summary-box { background:#0a0a0a; border:1px solid rgba(245,240,232,0.12); padding:30px; }
+  .summary-title { font-size:14px; letter-spacing:1.5px; font-weight:500; margin-bottom:24px; }
+  .summary-row { display:flex; justify-content:space-between; font-size:13px; color:rgba(245,240,232,0.7); margin-bottom:14px; }
+  .summary-total { display:flex; justify-content:space-between; font-size:16px; color:#F5F0E8; font-weight:500; border-top:1px solid rgba(245,240,232,0.15); padding-top:20px; margin-bottom:26px; }
+  .summary-total span:last-child { color:#C9A84C; }
+  .summary-line-items { display:flex; flex-direction:column; gap:12px; margin-bottom:20px; padding-bottom:20px; border-bottom:1px solid rgba(245,240,232,0.12); }
+  .summary-line-item { display:flex; justify-content:space-between; font-size:12.5px; color:rgba(245,240,232,0.65); }
+
+  .checkout-form { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  .checkout-form .full { grid-column:1 / -1; }
+  .back-to-cart-btn { background:transparent; border:none; color:#C9A84C; font-size:12.5px; letter-spacing:1.5px; cursor:pointer; margin-bottom:28px; padding:0; }
+
+  .confirm-box { max-width:480px; margin:0 auto; text-align:center; padding:20px 0 40px; }
+  .confirm-icon { width:64px; height:64px; border-radius:50%; border:1px solid #C9A84C; display:flex; align-items:center; justify-content:center; margin:0 auto 28px; }
+  .confirm-box h1 { font-family:'Cormorant Garamond', serif; font-size:30px; letter-spacing:2px; margin:0 0 18px; font-weight:600; }
+  .confirm-box p { font-size:14px; color:rgba(245,240,232,0.65); line-height:1.7; margin:0 0 8px; }
+  .confirm-box a { display:inline-block; background:#C9A84C; color:#071F1A; padding:14px 32px; font-size:12.5px; letter-spacing:2px; font-weight:500; margin-top:24px; }
+
+  @media (max-width: 860px) {
+    .cart-grid, .checkout-form-grid { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div id="navMount"></div>
+
+  <section class="cart-section">
+    <a href="index.html" class="back-circle">&#8592;</a>
+
+    <div class="cart-header">
+      <div class="eyebrow">SU PEDIDO</div>
+      <h1>CARRITO</h1>
+      <div class="rule"></div>
+    </div>
+
+    <div id="cartView" class="cart-grid hidden">
+      <div class="cart-items" id="cartItems"></div>
+      <div class="summary-box">
+        <div class="summary-title">RESUMEN</div>
+        <div class="summary-row"><span>Subtotal</span><span id="subtotal1"></span></div>
+        <div class="summary-row"><span>Envío</span><span>Gratis</span></div>
+        <div class="summary-total"><span>Total</span><span id="total1"></span></div>
+        <button type="button" id="goCheckoutBtn" class="gold-btn">PROCEDER AL PAGO</button>
+      </div>
+    </div>
+
+    <div id="checkoutView" class="cart-grid hidden">
+      <div>
+        <button type="button" id="backToCartBtn" class="back-to-cart-btn">&#8592; VOLVER AL CARRITO</button>
+        <div class="summary-title">DIRECCIÓN DE ENVÍO</div>
+        <div class="checkout-form">
+          <div class="full"><div class="form-label">NOMBRE COMPLETO</div><input type="text" id="shipFullName" class="field-input" placeholder="Nombre y apellidos" /></div>
+          <div class="full"><div class="form-label">CORREO ELECTRÓNICO</div><input type="email" id="shipEmail" class="field-input" placeholder="su@correo.com" /></div>
+          <div class="full"><div class="form-label">CÓDIGO POSTAL</div><input type="text" id="shipPostalCode" class="field-input" style="width:160px;" placeholder="00000" /></div>
+          <div class="full"><div class="form-label">CALLE Y NÚMERO</div><input type="text" id="shipStreet" class="field-input" placeholder="Calle, número exterior e interior" /></div>
+          <div class="full"><div class="form-label">COLONIA</div><input type="text" id="shipColonia" class="field-input" placeholder="Colonia" /></div>
+          <div><div class="form-label">CIUDAD</div><input type="text" id="shipCity" class="field-input" placeholder="Ciudad" /></div>
+          <div>
+            <div class="form-label">ESTADO</div>
+            <select id="shipState" class="field-input">
+              <option value="">Seleccione su estado</option>
+              <option>Ciudad de México</option>
+              <option>Jalisco</option>
+              <option>Nuevo León</option>
+              <option>Otro</option>
+            </select>
+          </div>
+          <div><div class="form-label">PAÍS</div><input type="text" id="shipCountry" class="field-input" value="México" /></div>
+          <div><div class="form-label">TELÉFONO</div><input type="tel" id="shipPhone" class="field-input" placeholder="10 dígitos" /></div>
+          <div class="full"><div class="form-label">REFERENCIAS (OPCIONAL)</div><input type="text" id="shipReference" class="field-input" placeholder="Entre calles, color de fachada, punto de referencia..." /></div>
+        </div>
+        <div id="checkoutError" class="error-text hidden"></div>
+      </div>
+      <div class="summary-box">
+        <div class="summary-title">RESUMEN</div>
+        <div class="summary-line-items" id="checkoutLineItems"></div>
+        <div class="summary-row"><span>Subtotal</span><span id="subtotal2"></span></div>
+        <div class="summary-row"><span>Envío</span><span>Gratis</span></div>
+        <div class="summary-total"><span>Total</span><span id="total2"></span></div>
+        <button type="button" id="confirmOrderBtn" class="gold-btn">CONFIRMAR PEDIDO</button>
+      </div>
+    </div>
+
+    <div id="confirmView" class="confirm-box hidden">
+      <div class="confirm-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+      <div class="eyebrow">PEDIDO CONFIRMADO</div>
+      <h1>GRACIAS POR SU COMPRA</h1>
+      <p>Su número de pedido es <span id="orderNumber" style="color:#F5F0E8;"></span>.</p>
+      <p>Le enviaremos la confirmación y el seguimiento de envío a su correo.</p>
+      <a href="index.html">SEGUIR EXPLORANDO</a>
+    </div>
+
+    <div id="emptyView" class="empty-state hidden">
+      Su carrito está vacío. Explore la <a href="index.html">colección</a> y encuentre su próxima pieza favorita.
+    </div>
+  </section>
+
+  <footer class="site-footer">© 2024 ÉCLAT. Todos los derechos reservados.</footer>
+</div>
+
+<script src="store.js"></script>
+<script src="nav-widgets.js"></script>
+<script src="reveal.js"></script>
+<script src="nav.js"></script>
+<script>
+(function () {
+  EclatNav.render(document.getElementById('navMount'), { active: '', icon: 'carrito', accountMode: 'link' });
+
+  var CART_KEY = 'eclat-cart';
+  function loadCart() { try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; } catch (e) { return []; } }
+  function saveCart(list) { localStorage.setItem(CART_KEY, JSON.stringify(list)); }
+  function parsePrice(str) { var n = parseFloat(String(str).replace(/[^0-9.]/g, '')); return isNaN(n) ? 0 : n; }
+  function formatPrice(n) { return '$' + n.toLocaleString('es-MX', { maximumFractionDigits: 0 }) + ' MXN'; }
+
+  var step = 'cart';
+
+  function update(id, delta) {
+    var cart = loadCart().map(function (it) {
+      if (it.id === id) return Object.assign({}, it, { qty: Math.max(1, it.qty + delta) });
+      return it;
+    });
+    saveCart(cart);
+    if (window.EclatUpdateBadge) window.EclatUpdateBadge();
+    render();
+  }
+
+  function removeItem(id) {
+    var cart = loadCart().filter(function (it) { return it.id !== id; });
+    saveCart(cart);
+    if (window.EclatUpdateBadge) window.EclatUpdateBadge();
+    render();
+  }
+
+  async function confirmOrder() {
+    var errorEl = document.getElementById('checkoutError');
+    errorEl.classList.add('hidden');
+    var confirmBtn = document.getElementById('confirmOrderBtn');
+    confirmBtn.disabled = true;
+    var originalLabel = confirmBtn.textContent;
+    confirmBtn.textContent = 'PROCESANDO...';
+
+    var cart = loadCart();
+    var shipping = {
+      fullName: document.getElementById('shipFullName').value.trim(),
+      email: document.getElementById('shipEmail').value.trim(),
+      postalCode: document.getElementById('shipPostalCode').value.trim(),
+      street: document.getElementById('shipStreet').value.trim(),
+      colonia: document.getElementById('shipColonia').value.trim(),
+      city: document.getElementById('shipCity').value.trim(),
+      state: document.getElementById('shipState').value,
+      country: document.getElementById('shipCountry').value.trim(),
+      phone: document.getElementById('shipPhone').value.trim(),
+      reference: document.getElementById('shipReference').value.trim(),
+    };
+
+    try {
+      var result = await window.EclatStore.placeOrder(
+        cart.map(function (it) { return { id: it.id, qty: it.qty }; }),
+        shipping
+      );
+      saveCart([]);
+      if (window.EclatUpdateBadge) window.EclatUpdateBadge();
+      document.getElementById('orderNumber').textContent = result.orderNumber;
+      step = 'confirmed';
+      render();
+    } catch (e) {
+      errorEl.textContent = e.message || 'No se pudo confirmar el pedido. Intente de nuevo.';
+      errorEl.classList.remove('hidden');
+    } finally {
+      confirmBtn.disabled = false;
+      confirmBtn.textContent = originalLabel;
+    }
+  }
+
+  document.getElementById('goCheckoutBtn').addEventListener('click', function () { step = 'checkout'; render(); });
+  document.getElementById('backToCartBtn').addEventListener('click', function () { step = 'cart'; render(); });
+  document.getElementById('confirmOrderBtn').addEventListener('click', confirmOrder);
+
+  function render() {
+    var cart = loadCart();
+    var total = cart.reduce(function (sum, it) { return sum + parsePrice(it.price) * it.qty; }, 0);
+    var subtotalStr = formatPrice(total);
+
+    document.getElementById('cartView').classList.add('hidden');
+    document.getElementById('checkoutView').classList.add('hidden');
+    document.getElementById('confirmView').classList.add('hidden');
+    document.getElementById('emptyView').classList.add('hidden');
+
+    if (step === 'confirmed') {
+      document.getElementById('confirmView').classList.remove('hidden');
+      return;
+    }
+    if (cart.length === 0) {
+      document.getElementById('emptyView').classList.remove('hidden');
+      return;
+    }
+
+    if (step === 'cart') {
+      document.getElementById('cartView').classList.remove('hidden');
+      document.getElementById('subtotal1').textContent = subtotalStr;
+      document.getElementById('total1').textContent = subtotalStr;
+
+      var itemsEl = document.getElementById('cartItems');
+      itemsEl.innerHTML = '';
+      cart.forEach(function (it) {
+        var href = 'Producto.html?id=' + it.id;
+        var row = document.createElement('div');
+        row.className = 'cart-item';
+        row.innerHTML =
+          '<a href="' + href + '" class="cart-item-photo"></a>' +
+          '<div>' +
+            '<a href="' + href + '" class="cart-item-name">' + it.name + '</a>' +
+            '<div class="cart-item-price">' + it.price + '</div>' +
+            '<div class="qty-box-sm">' +
+              '<button type="button" data-act="dec">&minus;</button>' +
+              '<div class="qty-val">' + it.qty + '</div>' +
+              '<button type="button" data-act="inc">+</button>' +
+            '</div>' +
+          '</div>' +
+          '<button type="button" class="cart-item-remove">ELIMINAR</button>';
+        row.querySelector('[data-act="dec"]').addEventListener('click', function () { update(it.id, -1); });
+        row.querySelector('[data-act="inc"]').addEventListener('click', function () { update(it.id, 1); });
+        row.querySelector('.cart-item-remove').addEventListener('click', function () { removeItem(it.id); });
+        itemsEl.appendChild(row);
+      });
+    } else if (step === 'checkout') {
+      document.getElementById('checkoutView').classList.remove('hidden');
+      document.getElementById('subtotal2').textContent = subtotalStr;
+      document.getElementById('total2').textContent = subtotalStr;
+      var lineEl = document.getElementById('checkoutLineItems');
+      lineEl.innerHTML = '';
+      cart.forEach(function (it) {
+        var line = document.createElement('div');
+        line.className = 'summary-line-item';
+        line.innerHTML = '<span>' + it.name + ' &times; ' + it.qty + '</span>';
+        lineEl.appendChild(line);
+      });
+    }
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>

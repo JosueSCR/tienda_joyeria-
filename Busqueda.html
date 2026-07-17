@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ÉCLAT — Búsqueda</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+  body { background:#000000; }
+  .search-section { position:relative; background:linear-gradient(0deg, #000000 0%, #04140f 60%, #04140f 100%); min-height:calc(100vh - 90px); padding:40px 56px 100px; }
+  .search-header { max-width:640px; margin:0 auto 56px; text-align:center; }
+  .search-header h1 { font-family:'Cormorant Garamond', serif; font-size:34px; letter-spacing:2px; margin:0 0 30px; font-weight:600; }
+  .search-input { width:100%; box-sizing:border-box; background:#0a0a0a; color:#F5F0E8; border:1px solid rgba(245,240,232,0.25); padding:16px 20px; font-size:14px; font-family:'Jost',sans-serif; outline:none; letter-spacing:0.5px; }
+  .filter-row { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:22px; }
+  .filter-pill { background:transparent; color:#F5F0E8; border:1px solid rgba(245,240,232,0.3); padding:8px 18px; font-size:11.5px; letter-spacing:1.5px; font-family:'Jost',sans-serif; cursor:pointer; border-radius:20px; }
+  .filter-pill.active { background:#C9A84C; color:#071F1A; border-color:#C9A84C; }
+  .price-select-wrap { margin-top:16px; text-align:center; }
+  .price-select { background:#0a0a0a; color:#F5F0E8; border:1px solid rgba(245,240,232,0.25); padding:10px 16px; font-size:12.5px; font-family:'Jost',sans-serif; }
+  .results-label { font-size:12px; letter-spacing:1.5px; color:rgba(245,240,232,0.5); margin-bottom:28px; max-width:1200px; margin-left:auto; margin-right:auto; }
+  .results-grid { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:repeat(4,1fr); gap:28px; }
+  .no-results { text-align:center; color:rgba(245,240,232,0.5); font-size:14px; padding:40px 0; }
+  @media (max-width: 1100px) { .results-grid { grid-template-columns:1fr 1fr; } }
+</style>
+</head>
+<body>
+<div class="page">
+  <div id="navMount"></div>
+
+  <section class="search-section">
+    <a href="index.html" class="back-circle">&#8592;</a>
+    <div class="search-header">
+      <div class="eyebrow">BUSCAR</div>
+      <h1>ENCUENTRE SU PIEZA</h1>
+      <input type="text" id="searchInput" class="search-input" placeholder="Busca por nombre: anillo, collar, pulsera, aretes..." autofocus />
+      <div class="filter-row" id="filterRow"></div>
+      <div class="price-select-wrap">
+        <select id="priceSelect" class="price-select">
+          <option value="">Cualquier precio</option>
+          <option value="low">Menos de $2,000 MXN</option>
+          <option value="mid">$2,000 – $4,000 MXN</option>
+          <option value="high">Más de $4,000 MXN</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="max-width:1200px; margin:0 auto;">
+      <div id="resultsLabel" class="results-label hidden"></div>
+      <div id="resultsGrid" class="results-grid"></div>
+      <div id="noResults" class="no-results hidden">No encontramos piezas que coincidan con su búsqueda.</div>
+    </div>
+  </section>
+
+  <footer class="site-footer">© 2024 ÉCLAT. Todos los derechos reservados.</footer>
+</div>
+
+<script src="store.js"></script>
+<script src="nav-widgets.js"></script>
+<script src="reveal.js"></script>
+<script src="nav.js"></script>
+<script>
+(function () {
+  EclatNav.render(document.getElementById('navMount'), { active: '', accountMode: 'link' });
+
+  var CATALOG_LIST = [
+    { cat: 'pulseras', label: 'PULSERAS' },
+    { cat: 'collares', label: 'COLLARES' },
+    { cat: 'anillos', label: 'ANILLOS' },
+    { cat: 'aretes', label: 'ARETES' },
+  ];
+
+  function parsePrice(str) { var n = parseFloat(String(str).replace(/[^0-9.]/g, '')); return isNaN(n) ? 0 : n; }
+
+  var allProductsCache = null;
+  async function loadAllProducts() {
+    if (allProductsCache) return allProductsCache;
+    var products = await window.EclatStore.getProducts();
+    allProductsCache = products.map(function (p) {
+      return { cat: p.cat, name: p.name, price: p.price, href: 'Producto.html?id=' + p.id };
+    });
+    return allProductsCache;
+  }
+
+  var params = new URLSearchParams(window.location.search);
+  var state = { query: params.get('q') || '', category: '', priceRange: '' };
+
+  var searchInput = document.getElementById('searchInput');
+  searchInput.value = state.query;
+  searchInput.addEventListener('input', function () { state.query = searchInput.value; render(); });
+
+  var priceSelect = document.getElementById('priceSelect');
+  priceSelect.addEventListener('change', function () { state.priceRange = priceSelect.value; render(); });
+
+  var filterRow = document.getElementById('filterRow');
+  function renderFilters() {
+    filterRow.innerHTML = '';
+    [{ cat: '', label: 'TODAS' }].concat(CATALOG_LIST).forEach(function (c) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'filter-pill' + (state.category === c.cat ? ' active' : '');
+      btn.textContent = c.label;
+      btn.addEventListener('click', function () { state.category = c.cat; render(); });
+      filterRow.appendChild(btn);
+    });
+  }
+
+  async function render() {
+    renderFilters();
+    var q = state.query.trim().toLowerCase();
+    var allProducts;
+    try {
+      allProducts = await loadAllProducts();
+    } catch (e) {
+      document.getElementById('resultsGrid').classList.add('hidden');
+      var noResultsEl = document.getElementById('noResults');
+      noResultsEl.textContent = 'No se pudo cargar el catálogo. Verifique que el servidor esté corriendo.';
+      noResultsEl.classList.remove('hidden');
+      return;
+    }
+    var results = q ? allProducts.filter(function (p) { return p.name.toLowerCase().indexOf(q) !== -1; }) : allProducts;
+    if (state.category) results = results.filter(function (p) { return p.cat === state.category; });
+    if (state.priceRange) {
+      results = results.filter(function (p) {
+        var price = parsePrice(p.price);
+        if (state.priceRange === 'low') return price < 2000;
+        if (state.priceRange === 'mid') return price >= 2000 && price <= 4000;
+        if (state.priceRange === 'high') return price > 4000;
+        return true;
+      });
+    }
+
+    var hasQuery = !!q || !!state.category || !!state.priceRange;
+    var labelEl = document.getElementById('resultsLabel');
+    if (hasQuery) {
+      labelEl.classList.remove('hidden');
+      labelEl.textContent = results.length + ' resultado' + (results.length === 1 ? '' : 's') + (q ? ' para "' + state.query + '"' : '');
+    } else {
+      labelEl.classList.add('hidden');
+    }
+
+    var grid = document.getElementById('resultsGrid');
+    var noResults = document.getElementById('noResults');
+    if (results.length === 0) {
+      grid.classList.add('hidden');
+      noResults.classList.remove('hidden');
+      return;
+    }
+    noResults.classList.add('hidden');
+    grid.classList.remove('hidden');
+    grid.innerHTML = '';
+    results.forEach(function (r) {
+      var a = document.createElement('a');
+      a.href = r.href;
+      a.className = 'product-card';
+      a.innerHTML =
+        '<div class="product-photo sm">product photo</div>' +
+        '<div class="product-name">' + r.name + '</div>' +
+        '<div class="product-price">' + r.price + '</div>';
+      grid.appendChild(a);
+    });
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>

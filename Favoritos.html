@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ÉCLAT — Favoritos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+  body { background:#000000; }
+  .fav-section { position:relative; background:linear-gradient(0deg, #000000 0%, #04140f 60%, #04140f 100%); min-height:calc(100vh - 90px); padding:40px 56px 100px; }
+  .fav-header { max-width:640px; margin:0 auto 56px; text-align:center; }
+  .fav-header h1 { font-family:'Cormorant Garamond', serif; font-size:34px; letter-spacing:2px; margin:0 0 16px; font-weight:600; }
+  .fav-header .rule { width:56px; height:2px; background:#C9A84C; margin:0 auto; }
+  .fav-grid { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:repeat(4,1fr); gap:28px; }
+  @media (max-width: 1100px) { .fav-grid { grid-template-columns:1fr 1fr; } }
+</style>
+</head>
+<body>
+<div class="page">
+  <div id="navMount"></div>
+
+  <section class="fav-section">
+    <a href="index.html" class="back-circle">&#8592;</a>
+    <div class="fav-header">
+      <div class="eyebrow">SU SELECCIÓN</div>
+      <h1>FAVORITOS</h1>
+      <div class="rule"></div>
+    </div>
+
+    <div id="favGrid" class="fav-grid hidden"></div>
+    <div id="emptyView" class="empty-state hidden">
+      Aún no ha agregado piezas a sus favoritos. Explore la <a href="index.html">colección</a> y guarde las que más le enamoren.
+    </div>
+  </section>
+
+  <footer class="site-footer">© 2024 ÉCLAT. Todos los derechos reservados.</footer>
+</div>
+
+<script src="store.js"></script>
+<script src="nav-widgets.js"></script>
+<script src="reveal.js"></script>
+<script src="nav.js"></script>
+<script>
+(function () {
+  EclatNav.render(document.getElementById('navMount'), { active: '', accountMode: 'link' });
+
+  var FAV_KEY = 'eclat-favorites';
+  function loadFavorites() { try { return JSON.parse(localStorage.getItem(FAV_KEY)) || []; } catch (e) { return []; } }
+  function saveFavorites(list) { localStorage.setItem(FAV_KEY, JSON.stringify(list)); }
+
+  function remove(id) {
+    var favs = loadFavorites().filter(function (f) { return f.id !== id; });
+    saveFavorites(favs);
+    render();
+  }
+
+  function render() {
+    var favorites = loadFavorites();
+    var grid = document.getElementById('favGrid');
+    var empty = document.getElementById('emptyView');
+
+    if (favorites.length === 0) {
+      grid.classList.add('hidden');
+      empty.classList.remove('hidden');
+      return;
+    }
+    empty.classList.add('hidden');
+    grid.classList.remove('hidden');
+    grid.innerHTML = '';
+
+    favorites.forEach(function (f) {
+      var href = 'Producto.html?id=' + f.id;
+      var wrap = document.createElement('div');
+      wrap.className = 'product-card';
+      wrap.innerHTML =
+        '<a href="' + href + '" class="product-photo sm">' +
+          'product photo' +
+          '<span class="fav-toggle" style="color:#C9A84C;"><svg width="23" height="23" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1"><path d="M12 21s-7.5-4.6-10-9.5C0.3 7.8 2.4 4 6 4c2 0 3.5 1 6 3.3C14.5 5 16 4 18 4c3.6 0 5.7 3.8 4 7.5C19.5 16.4 12 21 12 21z"></path></svg></span>' +
+        '</a>' +
+        '<a href="' + href + '" class="product-name">' + f.name + '</a>' +
+        '<div class="product-price">' + f.price + '</div>';
+      wrap.querySelector('.fav-toggle').addEventListener('click', function (e) {
+        e.preventDefault();
+        remove(f.id);
+      });
+      grid.appendChild(wrap);
+    });
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>

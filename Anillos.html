@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ÉCLAT — Anillos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+  body { background:#071F1A; }
+  .cat-hero { background:linear-gradient(0deg, #000000 0%, #04140f 50%, #04140f 100%); padding:80px 56px 110px; }
+  .cat-header { text-align:center; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div id="navMount"></div>
+
+  <section class="cat-hero">
+    <div class="cat-header">
+      <div class="breadcrumb"><a href="index.html">INICIO</a> / <span id="breadcrumbLabel" style="color:#F5F0E8;"></span></div>
+      <div class="eyebrow" data-reveal>COLECCIÓN</div>
+      <h1 class="page-title" id="pageTitle" data-reveal style="transition-delay:100ms;"></h1>
+      <div class="title-rule" data-reveal style="transition-delay:200ms;"></div>
+    </div>
+    <div class="product-grid" id="productGrid"></div>
+  </section>
+
+  <footer class="site-footer">© 2024 ÉCLAT. Todos los derechos reservados.</footer>
+</div>
+
+<script src="store.js"></script>
+<script src="nav-widgets.js"></script>
+<script src="reveal.js"></script>
+<script src="nav.js"></script>
+<script src="category.js"></script>
+<script>EclatCategory.init('anillos', 'ANILLOS');</script>
+</body>
+</html>

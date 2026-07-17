@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ÉCLAT — Crear Cuenta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+  body { background:#000000; }
+  .auth-section { background:linear-gradient(0deg, #000000 0%, #04140f 60%, #04140f 100%); min-height:calc(100vh - 90px); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 24px; }
+  .auth-box { width:100%; max-width:420px; }
+  .auth-header { text-align:center; margin-bottom:40px; }
+  .auth-header h1 { font-family:'Cormorant Garamond', serif; font-size:36px; letter-spacing:2px; margin:0 0 16px; font-weight:600; }
+  .auth-header .rule { width:56px; height:2px; background:#C9A84C; margin:0 auto; }
+  .auth-form { display:flex; flex-direction:column; gap:20px; }
+  .terms-label { display:flex; align-items:flex-start; gap:10px; font-size:12.5px; color:rgba(245,240,232,0.6); margin-top:4px; }
+  .terms-label input { margin-top:2px; }
+  .auth-footer { text-align:center; margin-top:32px; font-size:13px; color:rgba(245,240,232,0.6); }
+</style>
+</head>
+<body>
+<div class="page">
+  <div id="navMount"></div>
+
+  <section class="auth-section">
+    <div class="auth-box">
+      <div class="auth-header">
+        <div class="eyebrow">ÚNETE A ÉCLAT</div>
+        <h1>CREE SU CUENTA</h1>
+        <div class="rule"></div>
+      </div>
+
+      <form class="auth-form" onsubmit="return false;">
+        <div><div class="form-label">NOMBRE COMPLETO</div><input type="text" id="regName" class="field-input" placeholder="Su nombre" /></div>
+        <div><div class="form-label">CORREO ELECTRÓNICO</div><input type="email" id="regEmail" class="field-input" placeholder="su@correo.com" /></div>
+        <div><div class="form-label">CONTRASEÑA</div><input type="password" id="regPassword" class="field-input" placeholder="••••••••" /></div>
+        <div><div class="form-label">CONFIRMAR CONTRASEÑA</div><input type="password" id="regPasswordConfirm" class="field-input" placeholder="••••••••" /></div>
+        <label class="terms-label">
+          <input type="checkbox" id="regTerms" />
+          Acepto los <a href="#">términos y condiciones</a> y el <a href="#">aviso de privacidad</a>.
+        </label>
+        <div id="registerError" class="error-text hidden"></div>
+        <button type="button" id="handleRegisterBtn" class="gold-btn" style="margin-top:8px;">CREAR CUENTA</button>
+      </form>
+
+      <div class="auth-footer">¿Ya tiene una cuenta? <a href="IniciarSesion.html">Inicie sesión</a></div>
+    </div>
+  </section>
+
+  <footer class="site-footer">© 2024 ÉCLAT. Todos los derechos reservados.</footer>
+</div>
+
+<script src="store.js"></script>
+<script src="nav-widgets.js"></script>
+<script src="reveal.js"></script>
+<script src="nav.js"></script>
+<script>
+(function () {
+  EclatNav.render(document.getElementById('navMount'), { active: '', accountMode: 'hidden' });
+
+  document.getElementById('handleRegisterBtn').addEventListener('click', async function () {
+    var errorEl = document.getElementById('registerError');
+    errorEl.classList.add('hidden');
+
+    var name = document.getElementById('regName').value.trim();
+    var email = document.getElementById('regEmail').value.trim();
+    var password = document.getElementById('regPassword').value;
+    var passwordConfirm = document.getElementById('regPasswordConfirm').value;
+    var termsAccepted = document.getElementById('regTerms').checked;
+
+    if (!email || !password) {
+      errorEl.textContent = 'Correo y contraseña son requeridos.';
+      errorEl.classList.remove('hidden');
+      return;
+    }
+    if (password !== passwordConfirm) {
+      errorEl.textContent = 'Las contraseñas no coinciden.';
+      errorEl.classList.remove('hidden');
+      return;
+    }
+    if (!termsAccepted) {
+      errorEl.textContent = 'Debe aceptar los términos y condiciones.';
+      errorEl.classList.remove('hidden');
+      return;
+    }
+
+    try {
+      await window.EclatStore.register({ name: name, email: email, password: password });
+      if (window.EclatUpdateBadge) window.EclatUpdateBadge();
+      window.location.href = 'index.html';
+    } catch (e) {
+      errorEl.textContent = e.message || 'No se pudo crear la cuenta.';
+      errorEl.classList.remove('hidden');
+    }
+  });
+})();
+</script>
+</body>
+</html>

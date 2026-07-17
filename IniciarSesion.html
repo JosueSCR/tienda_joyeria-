@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ÉCLAT — Iniciar Sesión</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+  body { background:#000000; }
+  .auth-section { background:linear-gradient(0deg, #000000 0%, #04140f 60%, #04140f 100%); min-height:calc(100vh - 90px); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 24px; }
+  .auth-box { width:100%; max-width:420px; }
+  .auth-header { text-align:center; margin-bottom:40px; }
+  .auth-header h1 { font-family:'Cormorant Garamond', serif; font-size:36px; letter-spacing:2px; margin:0 0 16px; font-weight:600; }
+  .auth-header.sm h1 { font-size:32px; }
+  .auth-header .rule { width:56px; height:2px; background:#C9A84C; margin:0 auto; }
+  .auth-header .rule.mb { margin-bottom:20px; }
+  .auth-header p { font-size:13.5px; color:rgba(245,240,232,0.6); line-height:1.6; margin:0; }
+  .auth-form { display:flex; flex-direction:column; gap:20px; }
+  .forgot-link { align-self:flex-end; font-size:12.5px; color:#C9A84C; cursor:pointer; }
+  .auth-footer { text-align:center; margin-top:32px; font-size:13px; color:rgba(245,240,232,0.6); }
+  .auth-footer-links { text-align:center; margin-top:32px; font-size:13px; display:flex; flex-direction:column; gap:12px; }
+  .auth-footer-links a { cursor:pointer; }
+  .code-input { width:100%; box-sizing:border-box; background:#0a0a0a; color:#F5F0E8; border:1px solid rgba(245,240,232,0.25); padding:14px 16px; font-size:18px; letter-spacing:8px; text-align:center; font-family:'Jost',sans-serif; outline:none; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div id="navMount"></div>
+
+  <section class="auth-section">
+    <div class="auth-box">
+
+      <div id="stepLogin">
+        <div class="auth-header">
+          <div class="eyebrow">BIENVENIDO DE VUELTA</div>
+          <h1>INICIAR SESIÓN</h1>
+          <div class="rule"></div>
+        </div>
+        <div class="auth-form">
+          <div><div class="form-label">CORREO ELECTRÓNICO</div><input type="email" id="loginEmail" class="field-input" placeholder="su@correo.com" /></div>
+          <div><div class="form-label">CONTRASEÑA</div><input type="password" id="loginPassword" class="field-input" placeholder="••••••••" /></div>
+          <a class="forgot-link" id="goForgotEmail">¿Olvidó su contraseña?</a>
+          <div id="loginError" class="error-text hidden"></div>
+          <button type="button" id="handleLoginBtn" class="gold-btn" style="margin-top:8px;">INICIAR SESIÓN</button>
+        </div>
+        <div class="auth-footer">¿No tiene una cuenta? <a href="Registro.html">Regístrese</a></div>
+      </div>
+
+      <div id="stepForgotEmail" class="hidden">
+        <div class="auth-header sm">
+          <div class="eyebrow">RECUPERAR ACCESO</div>
+          <h1>¿OLVIDÓ SU CONTRASEÑA?</h1>
+          <div class="rule mb"></div>
+          <p>Ingrese el correo con el que se registró y le enviaremos un código de confirmación.</p>
+        </div>
+        <div class="auth-form">
+          <div><div class="form-label">CORREO ELECTRÓNICO</div><input type="email" id="forgotEmail" class="field-input" placeholder="su@correo.com" /></div>
+          <button type="button" id="sendCodeBtn" class="gold-btn" style="margin-top:8px;">ENVIAR CÓDIGO</button>
+        </div>
+        <div class="auth-footer-links"><a id="goLoginFromEmail">&#8592; Volver a iniciar sesión</a></div>
+      </div>
+
+      <div id="stepForgotCode" class="hidden">
+        <div class="auth-header sm">
+          <div class="eyebrow">REVISE SU CORREO</div>
+          <h1>CÓDIGO DE CONFIRMACIÓN</h1>
+          <div class="rule mb"></div>
+          <p>Enviamos un código de 6 dígitos a <span id="codeEmailLabel" style="color:#F5F0E8;"></span>.</p>
+        </div>
+        <div class="auth-form">
+          <div><div class="form-label">CÓDIGO DE CONFIRMACIÓN</div><input type="text" maxlength="6" class="code-input" placeholder="- - - - - -" /></div>
+          <button type="button" class="gold-btn" style="margin-top:8px;">CONFIRMAR CÓDIGO</button>
+        </div>
+        <div class="auth-footer-links">
+          <a id="resendCodeBtn">Reenviar código</a>
+          <a id="goLoginFromCode">&#8592; Volver a iniciar sesión</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="site-footer">© 2024 ÉCLAT. Todos los derechos reservados.</footer>
+</div>
+
+<script src="store.js"></script>
+<script src="nav-widgets.js"></script>
+<script src="reveal.js"></script>
+<script src="nav.js"></script>
+<script>
+(function () {
+  EclatNav.render(document.getElementById('navMount'), { active: '', accountMode: 'static' });
+
+  var steps = {
+    login: document.getElementById('stepLogin'),
+    'forgot-email': document.getElementById('stepForgotEmail'),
+    'forgot-code': document.getElementById('stepForgotCode'),
+  };
+
+  function goTo(step) {
+    Object.keys(steps).forEach(function (k) { steps[k].classList.toggle('hidden', k !== step); });
+  }
+
+  document.getElementById('goForgotEmail').addEventListener('click', function () { goTo('forgot-email'); });
+  document.getElementById('goLoginFromEmail').addEventListener('click', function () { goTo('login'); });
+  document.getElementById('goLoginFromCode').addEventListener('click', function () { goTo('login'); });
+  document.getElementById('resendCodeBtn').addEventListener('click', function () { goTo('forgot-code'); });
+  document.getElementById('sendCodeBtn').addEventListener('click', function () {
+    document.getElementById('codeEmailLabel').textContent = document.getElementById('forgotEmail').value.trim() || 'su correo';
+    goTo('forgot-code');
+  });
+
+  document.getElementById('handleLoginBtn').addEventListener('click', async function () {
+    var errorEl = document.getElementById('loginError');
+    errorEl.classList.add('hidden');
+    var email = document.getElementById('loginEmail').value.trim();
+    var password = document.getElementById('loginPassword').value;
+    if (!email || !password) {
+      errorEl.textContent = 'Ingrese su correo y contraseña.';
+      errorEl.classList.remove('hidden');
+      return;
+    }
+    try {
+      await window.EclatStore.login({ email: email, password: password });
+      if (window.EclatUpdateBadge) window.EclatUpdateBadge();
+      window.location.href = 'index.html';
+    } catch (e) {
+      errorEl.textContent = e.message || 'No se pudo iniciar sesión.';
+      errorEl.classList.remove('hidden');
+    }
+  });
+})();
+</script>
+</body>
+</html>
