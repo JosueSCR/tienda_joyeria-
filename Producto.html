@@ -21,9 +21,9 @@
 
   .pdp-grid { display:grid; grid-template-columns:80px 1fr 0.85fr; gap:24px; max-width:1080px; margin:0 auto; align-items:start; }
   .thumb-col { display:flex; flex-direction:column; gap:12px; }
-  .thumb { width:80px; height:80px; background:linear-gradient(160deg, #0a2b23, #050f0c); background-size:cover; background-position:center; border:1px solid rgba(245,240,232,0.15); cursor:pointer; transition:border-color 0.2s; }
+  .thumb { width:80px; height:80px; border-radius:8px; background:linear-gradient(160deg, #0a2b23, #050f0c); background-size:cover; background-position:center; border:1px solid rgba(245,240,232,0.15); cursor:pointer; transition:border-color 0.2s; }
   .thumb.active { border-color:#C9A84C; }
-  .main-image { height:440px; background:linear-gradient(160deg, #0a2b23, #050f0c); background-size:cover; background-position:center; display:flex; align-items:center; justify-content:center; color:rgba(245,240,232,0.35); font-size:12px; letter-spacing:1.5px; font-family:monospace; }
+  .main-image { aspect-ratio:1; border-radius:10px; background:linear-gradient(160deg, #0a2b23, #050f0c); background-size:cover; background-position:center; display:flex; align-items:center; justify-content:center; color:rgba(245,240,232,0.35); font-size:12px; letter-spacing:1.5px; font-family:monospace; }
 
   .pdp-info { display:flex; flex-direction:column; gap:20px; padding-top:4px; }
   .pdp-title { font-family:'Cormorant Garamond', serif; font-size:32px; letter-spacing:2px; margin:0; font-weight:600; }

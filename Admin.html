@@ -49,12 +49,13 @@
   .checkbox-label { font-size:12.5px; letter-spacing:1px; color:rgba(245,240,232,0.75); }
 
   .photo-row { display:flex; align-items:center; gap:14px; }
-  .photo-preview { width:72px; height:72px; background:#0a0a0a; border:1px solid rgba(245,240,232,0.25); flex-shrink:0; background-size:cover; background-position:center; }
+  .photo-preview { width:72px; height:72px; border-radius:8px; background:#0a0a0a; border:1px solid rgba(245,240,232,0.25); flex-shrink:0; background-size:cover; background-position:center; }
   .upload-label { cursor:pointer; font-size:12px; letter-spacing:1px; color:#C9A84C; border:1px solid rgba(201,168,76,0.4); padding:10px 16px; display:inline-block; }
 
   .detail-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
-  .detail-slot { cursor:pointer; display:block; }
-  .detail-preview { width:100%; aspect-ratio:1; background:#0a0a0a; border:1px dashed rgba(245,240,232,0.3); display:flex; align-items:center; justify-content:center; font-size:9.5px; letter-spacing:0.5px; color:rgba(245,240,232,0.35); text-align:center; background-size:cover; background-position:center; }
+  .detail-slot { cursor:pointer; display:block; position:relative; }
+  .detail-preview { width:100%; aspect-ratio:1; border-radius:8px; background:#0a0a0a; border:1px dashed rgba(245,240,232,0.3); display:flex; align-items:center; justify-content:center; font-size:9.5px; letter-spacing:0.5px; color:rgba(245,240,232,0.35); text-align:center; background-size:cover; background-position:center; }
+  .detail-adjust-btn { position:absolute; left:2px; right:2px; bottom:2px; border-radius:4px; background:rgba(0,0,0,0.72); color:#C9A84C; border:1px solid rgba(201,168,76,0.5); font-size:8px; letter-spacing:0.5px; padding:4px 0; cursor:pointer; text-align:center; font-family:'Jost',sans-serif; }
 
   .cat-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
   .cat-tile { position:relative; border:1px solid rgba(201,168,76,0.22); background:linear-gradient(160deg, rgba(201,168,76,0.06), transparent); padding:30px 22px; cursor:pointer; transition:border-color 0.25s ease, background 0.25s ease, transform 0.25s ease; }
@@ -75,7 +76,7 @@
 
   .row-view { display:flex; justify-content:space-between; align-items:center; gap:12px; }
   .row-left { display:flex; gap:14px; align-items:center; min-width:0; }
-  .row-thumb { width:50px; height:50px; background:#0a0a0a; border:1px solid rgba(201,168,76,0.25); flex-shrink:0; background-size:cover; background-position:center; }
+  .row-thumb { width:50px; height:50px; border-radius:6px; background:#0a0a0a; border:1px solid rgba(201,168,76,0.25); flex-shrink:0; background-size:cover; background-position:center; }
   .row-name { font-family:'Cormorant Garamond', serif; font-size:16px; font-weight:600; letter-spacing:0.5px; margin-bottom:3px; }
   .row-price { font-size:12.5px; color:rgba(245,240,232,0.55); }
   .row-price .offer { color:#C9A84C; }
@@ -91,10 +92,10 @@
   .edit-input { width:100%; box-sizing:border-box; background:#0a0a0a; color:#F5F0E8; border:1px solid rgba(245,240,232,0.25); padding:11px 13px; font-size:13px; font-family:'Jost',sans-serif; outline:none; }
   textarea.edit-input { resize:vertical; }
   .edit-photo-row { display:flex; align-items:center; gap:14px; }
-  .edit-photo-preview { width:56px; height:56px; background:#0a0a0a; border:1px solid rgba(245,240,232,0.25); flex-shrink:0; background-size:cover; background-position:center; }
+  .edit-photo-preview { width:56px; height:56px; border-radius:6px; background:#0a0a0a; border:1px solid rgba(245,240,232,0.25); flex-shrink:0; background-size:cover; background-position:center; }
   .edit-upload-label { cursor:pointer; font-size:11px; letter-spacing:1px; color:#C9A84C; border:1px solid rgba(201,168,76,0.4); padding:8px 12px; display:inline-block; }
   .edit-detail-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
-  .edit-detail-preview { width:100%; aspect-ratio:1; background:#0a0a0a; border:1px dashed rgba(245,240,232,0.3); display:flex; align-items:center; justify-content:center; font-size:8.5px; color:rgba(245,240,232,0.35); text-align:center; background-size:cover; background-position:center; }
+  .edit-detail-preview { width:100%; aspect-ratio:1; border-radius:8px; background:#0a0a0a; border:1px dashed rgba(245,240,232,0.3); display:flex; align-items:center; justify-content:center; font-size:8.5px; color:rgba(245,240,232,0.35); text-align:center; background-size:cover; background-position:center; }
   .edit-actions { display:flex; gap:10px; margin-top:4px; }
   .save-btn { flex:1; background:#C9A84C; color:#071F1A; border:none; padding:11px 0; font-size:11.5px; letter-spacing:1.5px; font-weight:500; cursor:pointer; }
   .cancel-btn { flex:1; background:transparent; border:1px solid rgba(245,240,232,0.25); color:#F5F0E8; padding:11px 0; font-size:11.5px; letter-spacing:1.5px; cursor:pointer; }
@@ -135,7 +136,7 @@
       <div style="margin-bottom:48px;">
         <div class="label-sm" style="margin-bottom:10px;">IMAGEN DE PORTADA (BANNER PRINCIPAL)</div>
         <div style="max-width:600px;">
-          <div id="heroPreview" style="width:100%; aspect-ratio:2.35; background:#0a0a0a; border:1px solid rgba(245,240,232,0.25); background-size:cover; background-position:center;"></div>
+          <div id="heroPreview" style="width:100%; aspect-ratio:2.35; border-radius:10px; background:#0a0a0a; border:1px solid rgba(245,240,232,0.25); background-size:cover; background-position:center;"></div>
           <div style="display:flex; gap:10px; margin-top:14px;">
             <label class="upload-label" style="text-align:center; flex:1;">
               SUBIR IMAGEN
@@ -200,6 +201,7 @@
                   SUBIR IMAGEN
                   <input type="file" id="formMainImage" accept="image/*" class="hidden" />
                 </label>
+                <button type="button" id="formMainAdjustBtn" class="upload-label hidden" style="background:transparent;">AJUSTAR ENCUADRE</button>
               </div>
             </div>
 
@@ -241,13 +243,6 @@
 (function () {
   var ADMIN_PASSWORD = 'eclat2024';
   var PLACEHOLDER_BG = '#0a0a0a';
-
-  function readAsDataUrl(file, cb) {
-    if (!file) return;
-    var reader = new FileReader();
-    reader.onload = function () { cb(reader.result); };
-    reader.readAsDataURL(file);
-  }
 
   function bgFor(el, url) {
     if (url) {
@@ -298,6 +293,7 @@
   // ---------- Store identity: hero banner + category photos ----------
   var HERO_RATIO = 2.35; // matches .hero's typical desktop framing
   var CATEGORY_RATIO = 301 / 340; // matches .collection-photo on the home page
+  var PRODUCT_RATIO = 1; // matches the square thumbnails/previews used across the site and admin
 
   var heroPreview = document.getElementById('heroPreview');
   var heroImageInput = document.getElementById('heroImageInput');
@@ -358,7 +354,7 @@
       tile.style.cssText = 'border:1px solid rgba(201,168,76,0.22); padding:18px;';
       tile.innerHTML =
         '<div style="font-size:13px; letter-spacing:1px; font-weight:500; margin-bottom:12px;">' + c.label + '</div>' +
-        '<div class="cat-image-preview" style="width:100%; aspect-ratio:' + CATEGORY_RATIO + '; background:#0a0a0a; border:1px solid rgba(245,240,232,0.25); background-size:cover; background-position:center; margin-bottom:12px;"></div>' +
+        '<div class="cat-image-preview" style="width:150px; max-width:100%; aspect-ratio:' + CATEGORY_RATIO + '; border-radius:8px; background:#0a0a0a; border:1px solid rgba(245,240,232,0.25); background-size:cover; background-position:center; margin-bottom:12px;"></div>' +
         '<div style="display:flex; gap:8px;">' +
           '<label class="upload-label" style="flex:1; text-align:center; font-size:10.5px; padding:9px 8px;">SUBIR<input type="file" accept="image/*" class="hidden cat-image-input" /></label>' +
           '<button type="button" class="gold-btn cat-image-save" style="width:auto; flex:1; padding:9px 8px; font-size:10.5px;">GUARDAR</button>' +
@@ -410,6 +406,7 @@
   var formOfferPrice = document.getElementById('formOfferPrice');
   var formMainPreview = document.getElementById('formMainPreview');
   var formMainImage = document.getElementById('formMainImage');
+  var formMainAdjustBtn = document.getElementById('formMainAdjustBtn');
   var formDetailGrid = document.getElementById('formDetailGrid');
   var formError = document.getElementById('formError');
   var formSuccess = document.getElementById('formSuccess');
@@ -419,11 +416,38 @@
     formOfferPriceWrap.classList.toggle('hidden', !formOfferOn.checked);
   });
 
+  function updateFormMainAdjustBtn() {
+    formMainAdjustBtn.classList.toggle('hidden', !state.formImages.main);
+  }
+
   formMainImage.addEventListener('change', function (e) {
     var file = e.target.files && e.target.files[0];
-    readAsDataUrl(file, function (url) {
-      state.formImages.main = url;
-      bgFor(formMainPreview, url);
+    if (!file) return;
+    window.EclatCropper.open({
+      file: file,
+      ratio: PRODUCT_RATIO,
+      outputWidth: 900,
+      title: 'Ajustar foto principal',
+      onDone: function (dataUrl) {
+        state.formImages.main = dataUrl;
+        bgFor(formMainPreview, dataUrl);
+        updateFormMainAdjustBtn();
+      },
+      onCancel: function () { formMainImage.value = ''; },
+    });
+  });
+
+  formMainAdjustBtn.addEventListener('click', function () {
+    if (!state.formImages.main) return;
+    window.EclatCropper.open({
+      src: state.formImages.main,
+      ratio: PRODUCT_RATIO,
+      outputWidth: 900,
+      title: 'Ajustar encuadre de foto principal',
+      onDone: function (dataUrl) {
+        state.formImages.main = dataUrl;
+        bgFor(formMainPreview, dataUrl);
+      },
     });
   });
 
@@ -443,13 +467,42 @@
         input.className = 'hidden';
         input.addEventListener('change', function (e) {
           var file = e.target.files && e.target.files[0];
-          readAsDataUrl(file, function (url) {
-            state.formImages.details[i] = url;
-            renderFormDetailGrid();
+          if (!file) return;
+          window.EclatCropper.open({
+            file: file,
+            ratio: PRODUCT_RATIO,
+            outputWidth: 700,
+            title: 'Ajustar foto de detalle ' + (i + 1),
+            onDone: function (dataUrl) {
+              state.formImages.details[i] = dataUrl;
+              renderFormDetailGrid();
+            },
+            onCancel: function () { input.value = ''; },
           });
         });
         label.appendChild(preview);
         label.appendChild(input);
+        if (state.formImages.details[i]) {
+          var adjustBtn = document.createElement('button');
+          adjustBtn.type = 'button';
+          adjustBtn.className = 'detail-adjust-btn';
+          adjustBtn.textContent = 'AJUSTAR';
+          adjustBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            window.EclatCropper.open({
+              src: state.formImages.details[i],
+              ratio: PRODUCT_RATIO,
+              outputWidth: 700,
+              title: 'Ajustar encuadre de detalle ' + (i + 1),
+              onDone: function (dataUrl) {
+                state.formImages.details[i] = dataUrl;
+                renderFormDetailGrid();
+              },
+            });
+          });
+          label.appendChild(adjustBtn);
+        }
         formDetailGrid.appendChild(label);
       })(i);
     }
@@ -465,6 +518,7 @@
     formOfferPriceWrap.classList.add('hidden');
     state.formImages = { main: '', details: ['', '', '', ''] };
     bgFor(formMainPreview, '');
+    updateFormMainAdjustBtn();
     renderFormDetailGrid();
   }
 
@@ -608,13 +662,42 @@
         input.className = 'hidden';
         input.addEventListener('change', function (e) {
           var file = e.target.files && e.target.files[0];
-          readAsDataUrl(file, function (url) {
-            state.editImages.details[i] = url;
-            renderEditDetailGrid(container);
+          if (!file) return;
+          window.EclatCropper.open({
+            file: file,
+            ratio: PRODUCT_RATIO,
+            outputWidth: 700,
+            title: 'Ajustar foto de detalle ' + (i + 1),
+            onDone: function (dataUrl) {
+              state.editImages.details[i] = dataUrl;
+              renderEditDetailGrid(container);
+            },
+            onCancel: function () { input.value = ''; },
           });
         });
         label.appendChild(preview);
         label.appendChild(input);
+        if (state.editImages.details[i]) {
+          var adjustBtn = document.createElement('button');
+          adjustBtn.type = 'button';
+          adjustBtn.className = 'detail-adjust-btn';
+          adjustBtn.textContent = 'AJUSTAR';
+          adjustBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            window.EclatCropper.open({
+              src: state.editImages.details[i],
+              ratio: PRODUCT_RATIO,
+              outputWidth: 700,
+              title: 'Ajustar encuadre de detalle ' + (i + 1),
+              onDone: function (dataUrl) {
+                state.editImages.details[i] = dataUrl;
+                renderEditDetailGrid(container);
+              },
+            });
+          });
+          label.appendChild(adjustBtn);
+        }
         container.appendChild(label);
       })(i);
     }
@@ -659,6 +742,7 @@
               '<label class="edit-upload-label">CAMBIAR FOTO PRINCIPAL' +
                 '<input type="file" id="editMainImage" accept="image/*" class="hidden" />' +
               '</label>' +
+              '<button type="button" id="editMainAdjustBtn" class="edit-upload-label hidden" style="background:transparent; cursor:pointer;">AJUSTAR ENCUADRE</button>' +
             '</div>' +
             '<div class="edit-detail-grid" id="editDetailGrid"></div>' +
             '<div class="edit-actions">' +
@@ -671,11 +755,36 @@
 
         var editMainPreview = row.querySelector('#editMainPreview');
         bgFor(editMainPreview, state.editImages.main);
-        row.querySelector('#editMainImage').addEventListener('change', function (e) {
+        var editMainImageInput = row.querySelector('#editMainImage');
+        var editMainAdjustBtn = row.querySelector('#editMainAdjustBtn');
+        editMainAdjustBtn.classList.toggle('hidden', !state.editImages.main);
+        editMainImageInput.addEventListener('change', function (e) {
           var file = e.target.files && e.target.files[0];
-          readAsDataUrl(file, function (url) {
-            state.editImages.main = url;
-            bgFor(editMainPreview, url);
+          if (!file) return;
+          window.EclatCropper.open({
+            file: file,
+            ratio: PRODUCT_RATIO,
+            outputWidth: 900,
+            title: 'Ajustar foto principal',
+            onDone: function (dataUrl) {
+              state.editImages.main = dataUrl;
+              bgFor(editMainPreview, dataUrl);
+              editMainAdjustBtn.classList.remove('hidden');
+            },
+            onCancel: function () { editMainImageInput.value = ''; },
+          });
+        });
+        editMainAdjustBtn.addEventListener('click', function () {
+          if (!state.editImages.main) return;
+          window.EclatCropper.open({
+            src: state.editImages.main,
+            ratio: PRODUCT_RATIO,
+            outputWidth: 900,
+            title: 'Ajustar encuadre de foto principal',
+            onDone: function (dataUrl) {
+              state.editImages.main = dataUrl;
+              bgFor(editMainPreview, dataUrl);
+            },
           });
         });
         renderEditDetailGrid(row.querySelector('#editDetailGrid'));
@@ -704,24 +813,22 @@
             '</div>' +
             '<div class="row-actions">' +
               '<button class="edit-btn">EDITAR</button>' +
-              (p.custom ? '<button class="remove-btn">ELIMINAR</button>' : '') +
+              '<button class="remove-btn">ELIMINAR</button>' +
             '</div>' +
           '</div>';
 
         productList.appendChild(row);
         bgFor(row.querySelector('.row-thumb'), p.images && p.images.main);
         row.querySelector('.edit-btn').addEventListener('click', function () { startEdit(p); });
-        var removeBtn = row.querySelector('.remove-btn');
-        if (removeBtn) {
-          removeBtn.addEventListener('click', async function () {
-            try {
-              await window.EclatStore.removeProduct(adminKey, p.id);
-              renderProductList();
-            } catch (e) {
-              alert(e.message || 'No se pudo eliminar el producto.');
-            }
-          });
-        }
+        row.querySelector('.remove-btn').addEventListener('click', async function () {
+          if (!window.confirm('¿Eliminar "' + p.name + '"? Esta acción no se puede deshacer.')) return;
+          try {
+            await window.EclatStore.removeProduct(adminKey, p.id);
+            renderProductList();
+          } catch (e) {
+            alert(e.message || 'No se pudo eliminar el producto.');
+          }
+        });
       }
     });
   }

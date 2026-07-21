@@ -39,8 +39,7 @@ input, select, textarea, button { font-family: 'Jost', sans-serif; }
 .product-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:32px; max-width:1300px; margin:0 auto; }
 .product-card { display:flex; flex-direction:column; gap:14px; color:#F5F0E8; position:relative; border-radius:6px; transition:transform 0.35s ease, box-shadow 0.35s ease; }
 .product-card:hover { transform:scale(1.03); box-shadow:0 0 28px rgba(45,212,158,0.35); }
-.product-photo { height:300px; background:linear-gradient(160deg, #0a2b23, #050f0c); background-size:cover; background-position:center; display:flex; align-items:center; justify-content:center; color:rgba(245,240,232,0.35); font-size:12px; letter-spacing:1.5px; font-family:monospace; position:relative; }
-.product-photo.sm { height:260px; }
+.product-photo { aspect-ratio:1; border-radius:10px; background:linear-gradient(160deg, #0a2b23, #050f0c); background-size:cover; background-position:center; display:flex; align-items:center; justify-content:center; color:rgba(245,240,232,0.35); font-size:12px; letter-spacing:1.5px; font-family:monospace; position:relative; overflow:hidden; }
 .offer-badge { position:absolute; top:14px; left:14px; background:#C9A84C; color:#071F1A; font-size:10.5px; letter-spacing:1.5px; font-weight:600; padding:5px 10px; }
 .fav-toggle { position:absolute; top:14px; right:14px; width:34px; height:34px; border-radius:50%; background:rgba(0,0,0,0.55); display:flex; align-items:center; justify-content:center; font-size:16px; cursor:pointer; border:none; }
 .product-name { font-size:14px; letter-spacing:1.5px; font-weight:500; padding:0 6px; }

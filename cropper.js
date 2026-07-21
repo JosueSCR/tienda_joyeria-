@@ -28,7 +28,7 @@
 
     var frameWrap = document.createElement('div');
     frameWrap.className = 'eclat-cropper-frame';
-    frameWrap.style.cssText = 'position:relative; width:' + frameWidth + 'px; height:' + frameHeight + 'px; overflow:hidden; background:#000; cursor:grab; touch-action:none; border:1px solid rgba(245,240,232,0.25); user-select:none;';
+    frameWrap.style.cssText = 'position:relative; width:' + frameWidth + 'px; height:' + frameHeight + 'px; overflow:hidden; border-radius:10px; background:#000; cursor:grab; touch-action:none; border:1px solid rgba(245,240,232,0.25); user-select:none;';
 
     var img = document.createElement('img');
     img.style.cssText = 'position:absolute; left:0; top:0; transform-origin:0 0; user-select:none; pointer-events:none;';
@@ -98,10 +98,6 @@
       zoomSlider.value = span > 0 ? String(Math.round(((state.scale - state.minScale) / span) * 100)) : '0';
     }
 
-    var reader = new FileReader();
-    reader.onload = function () { img.src = reader.result; };
-    reader.readAsDataURL(opts.file);
-
     img.onload = function () {
       state.naturalW = img.naturalWidth;
       state.naturalH = img.naturalHeight;
@@ -113,6 +109,14 @@
       state.ready = true;
       applyTransform();
     };
+
+    if (opts.file) {
+      var reader = new FileReader();
+      reader.onload = function () { img.src = reader.result; };
+      reader.readAsDataURL(opts.file);
+    } else {
+      img.src = opts.src;
+    }
 
     frameWrap.addEventListener('pointerdown', function (e) {
       if (!state.ready) return;

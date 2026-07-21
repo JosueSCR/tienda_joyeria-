@@ -1,5 +1,5 @@
 (function () {
-  var API_BASE = 'http://localhost:4000/api';
+  var API_BASE = '/api';
 
   function authHeaders(extra) {
     var headers = Object.assign({ 'Content-Type': 'application/json' }, extra || {});

@@ -1,4 +1,5 @@
 require('dotenv').config();
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
@@ -9,6 +10,7 @@ const app = express();
 app.use(cors());
 app.use(express.json({ limit: '15mb' }));
 app.use(attachUser);
+app.use(express.static(path.join(__dirname, '..')));
 
 function ah(fn) {
   return (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
