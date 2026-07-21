@@ -29,7 +29,7 @@ const PRODUCTS = [
   { cat: 'aretes', name: 'ARETES PERLA', price: 2430 },
 ];
 
-async function main() {
+async function runSeed() {
   const schema = fs.readFileSync(path.join(__dirname, 'schema.sql'), 'utf8');
   await pool.query(schema);
   console.log('Schema ready.');
@@ -66,8 +66,12 @@ async function main() {
   } else {
     console.log('hero_image setting already present, skipping.');
   }
-
-  await pool.end();
 }
 
-main().catch((e) => { console.error(e); process.exit(1); });
+module.exports = { runSeed };
+
+if (require.main === module) {
+  runSeed()
+    .then(() => pool.end())
+    .catch((e) => { console.error(e); process.exit(1); });
+}

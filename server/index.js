@@ -234,4 +234,9 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => console.log('ÉCLAT API listening on http://localhost:' + PORT));
+require('./seed').runSeed()
+  .then(() => console.log('Database ready.'))
+  .catch((e) => console.error('Seed on startup failed:', e))
+  .finally(() => {
+    app.listen(PORT, () => console.log('ÉCLAT API listening on http://localhost:' + PORT));
+  });
