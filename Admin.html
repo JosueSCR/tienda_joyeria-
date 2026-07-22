@@ -241,7 +241,6 @@
 <script src="cropper.js"></script>
 <script>
 (function () {
-  var ADMIN_PASSWORD = 'eclat2024';
   var PLACEHOLDER_BG = '#0a0a0a';
 
   function bgFor(el, url) {
@@ -270,17 +269,23 @@
   var passwordError = document.getElementById('passwordError');
   var unlockBtn = document.getElementById('unlockBtn');
 
-  function handleUnlock() {
-    if (passwordInput.value === ADMIN_PASSWORD) {
-      adminKey = passwordInput.value;
+  async function handleUnlock() {
+    var candidate = passwordInput.value;
+    unlockBtn.disabled = true;
+    try {
+      var res = await fetch('/api/admin/check', { headers: { 'x-admin-key': candidate } });
+      if (!res.ok) throw new Error('bad password');
+      adminKey = candidate;
       lockScreen.classList.add('hidden');
       adminPanel.classList.remove('hidden');
       renderCategoryGrid();
       loadHeroImage();
       loadCategoryImages();
-    } else {
+    } catch (e) {
       passwordError.classList.remove('hidden');
       passwordInput.classList.add('error');
+    } finally {
+      unlockBtn.disabled = false;
     }
   }
   unlockBtn.addEventListener('click', handleUnlock);

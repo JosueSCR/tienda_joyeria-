@@ -46,6 +46,9 @@ async function getCategoriesMap() {
   return map;
 }
 
+// ---------- Admin ----------
+app.get('/api/admin/check', requireAdmin, (req, res) => res.json({ ok: true }));
+
 // ---------- Categories ----------
 app.get('/api/categories', ah(async (req, res) => {
   const categories = await getCategoriesMap();
