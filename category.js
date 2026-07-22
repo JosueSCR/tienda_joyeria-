@@ -18,12 +18,15 @@
 
     var grid = document.getElementById('productGrid');
 
-    function toggleFavorite(id, name, price) {
+    function toggleFavorite(id, name, price, btn) {
       var favs = loadFavorites();
       var i = favs.findIndex(function (f) { return f.id === id; });
-      if (i >= 0) favs.splice(i, 1); else favs.push({ id: id, name: name, price: price });
+      var nowFav;
+      if (i >= 0) { favs.splice(i, 1); nowFav = false; }
+      else { favs.push({ id: id, name: name, price: price }); nowFav = true; }
       saveFavorites(favs);
-      render();
+      btn.style.color = nowFav ? '#C9A84C' : '#F5F0E8';
+      btn.textContent = nowFav ? '♥' : '♡';
     }
 
     async function render() {
@@ -66,7 +69,7 @@
         favBtn.addEventListener('click', function (e) {
           e.preventDefault();
           e.stopPropagation();
-          toggleFavorite(p.id, p.name, p.price);
+          toggleFavorite(p.id, p.name, p.price, favBtn);
         });
         photo.appendChild(favBtn);
 
