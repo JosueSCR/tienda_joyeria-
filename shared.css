@@ -9,17 +9,40 @@ input, select, textarea, button { font-family: 'Jost', sans-serif; }
 .page { color:#F5F0E8; font-family:'Jost', sans-serif; min-height:100vh; }
 
 /* ---------- Navbar ---------- */
-.nav { background:#000000; display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap; padding:24px 32px; border-bottom:1px solid rgba(201,168,76,0.25); }
+.nav { background:#000000; position:relative; display:flex; align-items:center; justify-content:space-between; gap:24px; padding:20px 32px; border-bottom:1px solid rgba(201,168,76,0.25); }
 .nav-brand { font-family:'Cormorant Garamond', serif; font-size:28px; letter-spacing:6px; color:#C9A84C; font-weight:600; }
 .nav-links { display:flex; flex-wrap:wrap; gap:20px 28px; font-size:13px; letter-spacing:2px; justify-content:center; flex:1 1 auto; }
 .nav-links a { color:#F5F0E8; white-space:nowrap; transition:color 0.2s, transform 0.2s; display:inline-block; }
 .nav-links a:hover { color:#C9A84C; transform:scale(1.08); }
 .nav-links a.active { color:#C9A84C; }
 .nav-links a.active:hover { transform:scale(1.08); }
-.nav-icons { display:flex; gap:18px; font-size:18px; flex-shrink:0; }
+.nav-icons { display:flex; align-items:center; gap:18px; font-size:18px; flex-shrink:0; }
 .nav-icons a, .nav-icons span.icon-static { cursor:pointer; color:#F5F0E8; font-size:18px; transition:color 0.2s, transform 0.2s; display:inline-flex; position:relative; }
 .nav-icons a:hover { color:#C9A84C; transform:scale(1.15); }
 .nav-icons a.active, .nav-icons span.icon-active { color:#C9A84C; }
+
+.nav-toggle { display:none; background:transparent; border:none; color:#F5F0E8; cursor:pointer; padding:4px; margin-left:4px; }
+.nav-toggle svg { display:block; }
+
+@media (max-width: 780px) {
+  .nav { padding:18px 20px; }
+  .nav-brand { font-size:22px; letter-spacing:4px; }
+  .nav-toggle { display:flex; }
+  .nav-links {
+    display:none;
+    position:absolute;
+    top:100%; left:0; right:0;
+    flex-direction:column;
+    align-items:center;
+    gap:22px;
+    padding:28px 20px;
+    background:#000000;
+    border-bottom:1px solid rgba(201,168,76,0.25);
+    z-index:50;
+  }
+  .nav-links.open { display:flex; }
+  .nav-icons { gap:16px; }
+}
 
 /* ---------- Footer ---------- */
 .site-footer { background:#000000; padding:40px 56px; text-align:center; border-top:1px solid rgba(201,168,76,0.2); font-size:12px; color:rgba(245,240,232,0.45); }
@@ -64,4 +87,6 @@ input, select, textarea, button { font-family: 'Jost', sans-serif; }
 }
 @media (max-width: 620px) {
   .product-grid { grid-template-columns:1fr; }
+  .back-circle { top:24px; left:20px; }
+  .page-title { font-size:32px; }
 }

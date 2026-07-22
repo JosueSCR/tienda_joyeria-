@@ -37,14 +37,23 @@
     mount.innerHTML =
       '<nav class="nav">' +
         '<a href="index.html" class="nav-brand">ÉCLAT</a>' +
-        '<div class="nav-links">' + linksHtml + '</div>' +
+        '<div class="nav-links" id="eclatNavLinks">' + linksHtml + '</div>' +
         '<div class="nav-icons">' +
           '<a href="Busqueda.html">' + ICONS.search + '</a>' +
           accountHtml +
           '<a href="Favoritos.html">' + ICONS.favorites + '</a>' +
           cartHtml +
+          '<button type="button" class="nav-toggle" id="eclatNavToggle" aria-label="Abrir menú">' +
+            '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="17" x2="20" y2="17"></line></svg>' +
+          '</button>' +
         '</div>' +
       '</nav>';
+
+    var navLinks = mount.querySelector('#eclatNavLinks');
+    var navToggle = mount.querySelector('#eclatNavToggle');
+    navToggle.addEventListener('click', function () {
+      navLinks.classList.toggle('open');
+    });
 
     if (window.EclatUpdateBadge) window.EclatUpdateBadge();
   }

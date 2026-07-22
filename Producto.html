@@ -12,6 +12,7 @@
   select { appearance:none; -webkit-appearance:none; }
 
   .crumb-section { padding:28px 56px 12px; }
+  .pdp-section { padding:24px 56px 100px; }
   .back-circle-inline { display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; border:1px solid rgba(245,240,232,0.25); border-radius:50%; font-size:20px; color:#F5F0E8; }
 
   .not-found { max-width:480px; margin:0 auto; text-align:center; padding:60px 0; }
@@ -53,6 +54,14 @@
     .thumb-col { flex-direction:row; }
     .related-grid { grid-template-columns:1fr 1fr; }
   }
+
+  @media (max-width: 620px) {
+    .crumb-section { padding:20px 20px 12px; }
+    .pdp-section { padding:20px 20px 80px; }
+    .related-section { padding:20px 20px 80px; }
+    .thumb-col { gap:8px; overflow-x:auto; }
+    .thumb { width:64px; height:64px; flex-shrink:0; }
+  }
 </style>
 </head>
 <body>
@@ -66,7 +75,7 @@
     <a id="backLink" href="#" class="back-circle-inline">&#8592;</a>
   </section>
 
-  <section style="padding:24px 56px 100px;">
+  <section class="pdp-section">
     <div id="notFound" class="not-found hidden">
       <div class="eyebrow">ERROR 404</div>
       <h1>PRODUCTO NO ENCONTRADO</h1>
